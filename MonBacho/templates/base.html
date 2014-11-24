@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<html xmlns="http://www.w3.org/1999/xhtml">
+	<head>
+		<link rel="stylesheet" type="text/css" href="/static/css/style.css" />
+		<title>MonBacho - {% block title %}Bienvenue{% endblock %}</title> 
+	</head>
+	<body  id="{% block bodyId %}genericPage{% endblock %}"> 
+		<header> 
+			{% block headerContent %}{% endblock %}
+		</header>
+		<section id="content"> 
+			{% block content %}{% endblock %} 
+		</section>
+	</body>
+
+</html>
