@@ -1,10 +1,15 @@
-from django.conf.urls import include, url
-from django.contrib import admin
+#-*- coding: utf-8 -*-
+
+from django.conf.urls import url
+from views import welcome
+from views import login
 
 urlpatterns = [
     # Examples:
     # url(r'^$', 'MonBacho.views.home', name='home'),
     # url(r'^blog/', include('blog.urls')),
 
-    url(r'^admin/', include(admin.site.urls)),
+    url(r'^$', welcome),
+    url(r'^welcome$', welcome),
+    url(r'^login$', login)
 ]

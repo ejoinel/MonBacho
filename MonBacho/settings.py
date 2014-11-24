@@ -12,6 +12,13 @@ https://docs.djangoproject.com/en/dev/ref/settings/
 import os
 
 DEFAULT_CHARSET = 'utf-8'
+DEFAULT_CONTENT_TYPE = 'application/xhtml+xml'
+
+PROJECT_ROOT = os.path.abspath(os.path.dirname(__file__))
+TEMPLATE_DIRS = (os.path.join(PROJECT_ROOT, 'templates'),)
+
+STATIC_URL = '/static/'
+STATICFILES_DIRS = (os.path.join(PROJECT_ROOT, 'static'),)
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
