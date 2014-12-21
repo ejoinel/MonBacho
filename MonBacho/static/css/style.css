@@ -2,33 +2,32 @@ header {
 	position: absolute;
 	left: 0;
 	top: 0;
-	height: 200px;
+	height: 100%;
 	width: 100%;
-	background: url('../img/logo1.png')  no-repeat 50px 25px;
+	background: url('../img/logo3.png')  no-repeat 50px 25px;
 	border-bottom: 1px solid #133783;
 }
 
-
 body#loginPage section#content { 
 	position: absolute; 
-	top: 300px; 
+	top: 200px; 
 	left: 50%; 
 	width: 500px; 
-	margin: 0 0 0 -100px; 
+	margin: 0 0 0 -250px; 
 	padding: 0;
 }
 
 form label { 
 	display: block;
 	width: 150px;
-	float: left ; 
-	text-align: right;
+	float: left;
+	text-align:right; 
 	padding: 4px 10px 0 0;
 }
 
 form input[type="email"], form input[type="text"], form input[type="password"]{
 	display: block;
-	width: 100px; 
+	width: 200px; 
 	padding: 2px;
 }
 
@@ -46,3 +45,15 @@ form input[type="submit"] {
 a { 
 	color: #3b5998;
 }
+
+form p.error{
+	margin-left: 160px;
+	color: #d23d24;	
+}
+
+ul.errorlist {
+	margin-left: 160px;
+	padding: 0;
+	list-style-type: none;
+	color: #d23d24;
+} 

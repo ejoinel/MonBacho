@@ -1,0 +1,2 @@
+#Lancer le server MySQL
+mysql.server start
