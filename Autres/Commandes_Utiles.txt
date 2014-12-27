@@ -1,2 +1,5 @@
 #Lancer le server MySQL
 mysql.server start
+
+#Créer un superuser
+python ./manage.py createsuperuser

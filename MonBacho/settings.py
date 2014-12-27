@@ -12,7 +12,7 @@ https://docs.djangoproject.com/en/dev/ref/settings/
 import os
 
 DEFAULT_CHARSET = 'utf-8'
-DEFAULT_CONTENT_TYPE = 'application/xhtml+xml'
+DEFAULT_CONTENT_TYPE = 'text/html'
 
 PROJECT_ROOT = os.path.abspath(os.path.dirname(__file__))
 TEMPLATE_DIRS = (os.path.join(PROJECT_ROOT, 'templates'),)
@@ -46,6 +46,7 @@ INSTALLED_APPS = (
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'MonBacho',
 )
 
 MIDDLEWARE_CLASSES = (
@@ -69,8 +70,12 @@ WSGI_APPLICATION = 'MonBacho.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+        'ENGINE': 'django.db.backends.mysql',
+        'NAME': 'sikolo',
+        'USER': 'root',
+        'PASSWORD': 'nous_pau',
+        'HOST': 'localhost', # Or an IP Address that your DB is hosted on
+        'PORT': '3306',
     }
 }
 
