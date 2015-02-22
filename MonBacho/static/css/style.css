@@ -1,10 +1,10 @@
 
 body#loginPage section#content { 
 	position: absolute; 
-	top: 200px; 
+	top: 150px; 
 	left: 50%; 
 	width: 500px; 
-	margin: 0 0 0 -250px; 
+	margin: 0 0 0 -550px; 
 	padding: 0;
 }
 
@@ -46,7 +46,13 @@ ul.errorlist {
 	color: #d23d24;
 }
 
+fieldset {
+-webkit-border-radius: 8px;
+-moz-border-radius: 8px;
+border-radius: 8px;
+}
 
+/* Bootstrap custom*/
 .navbar-default {
   background-color: #4463a2;
   border-color: #7dc0b7;

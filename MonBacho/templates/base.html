@@ -16,6 +16,12 @@
 			{% block content %}{% endblock %} 
 		</section>
 	    <script src="{% static 'js/jquery-2.1.3.min.js' %}"></script>
-	    <script src="{% static 'js/bootstrap.min.js' %}"></script>	    
+	    <script src="{% static 'js/bootstrap.min.js' %}"></script>
+	    <script type="text/javascript" >
+	    	$(document).ready(function(){
+		        $("#id_password").attr('placeholder', 'Mot de passe');
+		        $("#id_email").attr('placeholder', 'Email');
+	    	});
+    	</script>
 	</body>
 </html>
