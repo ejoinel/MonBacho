@@ -2,3 +2,4 @@
 *.pyo
 .idea/
 settings.py
+.DS_Store
