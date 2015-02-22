@@ -7,8 +7,8 @@ import ERROR_TXT
 
 class LoginForm(forms.Form):
 
-    email = forms.EmailField(label=FORM_PROPERTIES.FORM_EMAIL)
-    password = forms.CharField(label=FORM_PROPERTIES.FORM_PASSWORD, widget=forms.PasswordInput)
+    email = forms.EmailField(label=FORM_PROPERTIES.FORM_EMAIL, max_length=30, widget=forms.EmailInput)
+    password = forms.CharField(label=FORM_PROPERTIES.FORM_PASSWORD, widget=forms.PasswordInput, max_length=30)
 
     def clean(self):
         cleaned_data = super (LoginForm, self).clean()

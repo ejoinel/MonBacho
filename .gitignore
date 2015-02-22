@@ -1,1 +1,14 @@
 *.pyc
+*.pyo
+.idea/
+settings.py
+.DS_Store
+MonBacho/.DS_Store
+
+.idea/.name
+
+*.xml
+
+*.xml
+
+*.prefs
