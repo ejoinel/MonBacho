@@ -46,10 +46,13 @@ ul.errorlist {
 	color: #d23d24;
 }
 
-fieldset {
--webkit-border-radius: 8px;
--moz-border-radius: 8px;
-border-radius: 8px;
+.fieldset {
+	background-color:#F2F2F2;
+    border: 1px solid #F2F2F2;
+    -moz-border-radius:8px;
+    -webkit-border-radius:8px;	
+    border-radius:8px;
+    padding: 10px;
 }
 
 /* Bootstrap custom*/
