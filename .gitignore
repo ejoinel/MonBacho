@@ -12,3 +12,5 @@ MonBacho/.DS_Store
 *.xml
 
 *.prefs
+
+MonBacho/static/.DS_Store
