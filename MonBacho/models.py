@@ -10,6 +10,19 @@ STUDENT_TYPE_CHOICES = (
 
 
 
+MATTER_TYPE_CHOICES = (
+    ('0', 'Mathématique'),
+    ('1', 'Français'),
+    ('2', 'SVT'),
+    ('3', 'Musique'),
+    ('4', 'Anglais'),
+    ('5', 'Philosophie'),
+    ('6', 'Espagnol'),
+    ('7', 'Physique-Chimie')
+)
+
+
+
 PERSON_SEX_CHOISE = (
     ('0', 'Mr'),
     ('1', 'Mme'),
@@ -73,7 +86,6 @@ class professor(personne):
         db_table = 'professor'
 
     school = models.IntegerField(choices=SCHOOL_TYPE_CHOICES, default=0)
-    school = models.IntegerField(choices=SCHOOL_TYPE_CHOICES, default=0)
     function = models.CharField(max_length=50)
 
     def __unicode__(self):
@@ -81,26 +93,27 @@ class professor(personne):
 
 
 
-
-class course (models.Model):
+class exam (models.Model):
 
     class Meta:
-        db_table = 'course'
+        db_table = 'exam'
     name = models.CharField(max_length=30)
-    subject = models.ForeignKey(subject, null=True, blank=True, default=None)
+    creation_date = models.DateField()
+    matter = models.IntegerField(choices=MATTER_TYPE_CHOICES, default=0)
+    creator = models.ForeignKey(personne)
 
     def __unicode__(self):
-        return self.name
+        return self.name + " " + self.matter
 
 
 
-class examen (models.Model):
+class examperiod (models.Model):
 
     class Meta:
-        db_table = 'examen'
+        db_table = 'examperiod'
     name = models.CharField(max_length=30)
-    is_real_examen = models.BooleanField(default=True)
-    subject = models.ManyToManyField('subject', through='concern', related_name='subject')
+    mock_exam = models.BooleanField(default=True)
+    examens = models.ManyToManyField('exam', through='concern', related_name='exam')
 
     def __unicode__(self):
         return self.name + " " + self.is_real_examen
@@ -115,7 +128,7 @@ class classgrades (models.Model):
     creation_date = models.DateField()
     school = models.IntegerField(choices=SCHOOL_TYPE_CHOICES, default=0)
     grade = models.IntegerField(choices=STUDENT_TYPE_CHOICES, default=0)
-    examen = models.ManyToManyField('examen', through='concern', related_name='examen')
+    examperiod = models.ManyToManyField('examperiod', through='concern', related_name='examperiod')
 
     def __unicode__(self):
         return self.name
@@ -127,9 +140,9 @@ class concern (models.Model):
     class Meta:
         db_table = 'concern'
     exam_date = models.DateField()
-    subject = models.ForeignKey(subject, related_name='PassExam')
-    examen = models.ForeignKey(examen, related_name='PassExam')
-    classgrade = models.ForeignKey(classgrades, related_name='PassExam')
+    exam = models.ForeignKey(exam, related_name='concern_exam')
+    examperiod = models.ForeignKey(examperiod, related_name='concern_period')
+    classgrade = models.ForeignKey(classgrades, related_name='concern_class')
 
     def __unicode__(self):
         return self.pass_date + " - " + self.examen.name + " (" + self.classgrade.name + "," + self.subject.name + ")"
