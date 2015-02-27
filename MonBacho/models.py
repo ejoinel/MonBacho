@@ -102,8 +102,8 @@ class exam (models.Model):
     name = models.CharField(max_length=30)
     creation_date = models.DateField()
     matter = models.IntegerField(choices=MATTER_TYPE_CHOICES, default=0)
-    creator = models.ForeignKey(user)
     corrections = models.ManyToManyField('correction', through='propose', related_name='correction')
+    users = models.ManyToManyField('user', through='submit', related_name='submit')
 
     def __unicode__(self):
         return self.name + " " + self.matter
@@ -162,6 +162,19 @@ class read (models.Model):
 
     def __unicode__(self):
         return self.user.name + " - " + self.exam.name + " (" + self.read_date + ")"
+
+
+
+class submit (models.Model):
+
+    class Meta:
+        db_table = 'submit'
+    submit_date = models.DateField()
+    exam = models.ForeignKey(exam, related_name='submit_exam')
+    user = models.ForeignKey(user, related_name='submit_user')
+
+    def __unicode__(self):
+        return self.user.name + " - " + self.exam.name + " (" + self.submit_date + ")"
 
 
 
