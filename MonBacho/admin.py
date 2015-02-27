@@ -1,11 +1,16 @@
 #-*- coding: utf-8 -*-
 
 from django.contrib import admin
-from MonBacho.models import exam, concern, subject, personne, student, professor
+from MonBacho.models import exam, concern, user, student, professor, correction, read, propose, classgrades, examperiod, comment
 
-admin.site.register(personne)
+admin.site.register(correction)
+admin.site.register(read)
+admin.site.register(propose)
+admin.site.register(classgrades)
+admin.site.register(examperiod)
+admin.site.register(comment)
+admin.site.register(user)
 admin.site.register(student)
 admin.site.register(professor)
-admin.site.register(subject)
 admin.site.register(exam)
 admin.site.register(concern)

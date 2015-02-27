@@ -38,21 +38,10 @@ SCHOOL_TYPE_CHOICES = (
 
 
 
-class subject (models.Model):
+class user(models.Model):
 
     class Meta:
-        db_table = 'subject'
-    name = models.CharField(max_length=30)
-
-    def __unicode__(self):
-        return self.name
-
-
-
-class personne(models.Model):
-
-    class Meta:
-        db_table = 'person'
+        db_table = 'user'
 
     sex = models.IntegerField(choices=PERSON_SEX_CHOISE, default=0)
     name = models.CharField(max_length=30)
@@ -68,7 +57,7 @@ class personne(models.Model):
 
 
 
-class student(personne):
+class student(user):
 
     class Meta:
         db_table = 'student'
@@ -80,7 +69,7 @@ class student(personne):
 
 
 
-class professor(personne):
+class professor(user):
 
     class Meta:
         db_table = 'professor'
@@ -93,6 +82,19 @@ class professor(personne):
 
 
 
+class correction(user):
+
+    class Meta:
+        db_table = 'correction'
+
+    creation_date = models.DateField()
+    fields = models.CharField(max_length=50)
+
+    def __unicode__(self):
+        return self.fields + " " + self.creation_date
+
+
+
 class exam (models.Model):
 
     class Meta:
@@ -100,7 +102,8 @@ class exam (models.Model):
     name = models.CharField(max_length=30)
     creation_date = models.DateField()
     matter = models.IntegerField(choices=MATTER_TYPE_CHOICES, default=0)
-    creator = models.ForeignKey(personne)
+    creator = models.ForeignKey(user)
+    corrections = models.ManyToManyField('correction', through='propose', related_name='correction')
 
     def __unicode__(self):
         return self.name + " " + self.matter
@@ -145,6 +148,45 @@ class concern (models.Model):
     classgrade = models.ForeignKey(classgrades, related_name='concern_class')
 
     def __unicode__(self):
-        return self.pass_date + " - " + self.examen.name + " (" + self.classgrade.name + "," + self.subject.name + ")"
+        return self.exam_date + " - " + self.examperiod.name + " (" + self.classgrade.name + "," + self.exam.name + ")"
 
 
+
+class read (models.Model):
+
+    class Meta:
+        db_table = 'read'
+    read_date = models.DateField()
+    exam = models.ForeignKey(exam, related_name='read_exam')
+    user = models.ForeignKey(user, related_name='read_user')
+
+    def __unicode__(self):
+        return self.user.name + " - " + self.exam.name + " (" + self.read_date + ")"
+
+
+
+class comment (models.Model):
+
+    class Meta:
+        db_table = 'comment'
+    comment_date = models.DateField()
+    comment = models.TextField(max_length=30)
+    exam = models.ForeignKey(exam, related_name='comment_exam')
+    user = models.ForeignKey(user, related_name='comment_read')
+
+    def __unicode__(self):
+        return self.user.name + " - " + self.exam.name + " - " + self.comment + " (" + self.comment_date + ")"
+
+
+
+class propose(models.Model):
+
+    class Meta:
+        db_table = 'propose'
+    proposition_date = models.DateField()
+    correction = models.ForeignKey(correction, related_name='propose_correction')
+    exam = models.ForeignKey(exam, related_name='propose_exam')
+    user = models.ForeignKey(user, related_name='propose_user')
+
+    def __unicode__(self):
+        return self.user.name + " - " + self.exam.name + self.correction.fields + " (" + self.comment_date + ")"
