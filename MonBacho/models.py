@@ -3,25 +3,6 @@
 from django.db import models
 
 
-STUDENT_TYPE_CHOICES = (
-    ('0', 'Terminale'),
-    ('1', 'Troisième'),
-)
-
-
-
-MATTER_TYPE_CHOICES = (
-    ('0', 'Mathématique'),
-    ('1', 'Français'),
-    ('2', 'SVT'),
-    ('3', 'Musique'),
-    ('4', 'Anglais'),
-    ('5', 'Philosophie'),
-    ('6', 'Espagnol'),
-    ('7', 'Physique-Chimie')
-)
-
-
 
 PERSON_SEX_CHOISE = (
     ('0', 'Mr'),
@@ -31,10 +12,36 @@ PERSON_SEX_CHOISE = (
 
 
 
-SCHOOL_TYPE_CHOICES = (
-    ('0', 'Lycée Leon MBA'),
-    ('1', 'Collège Béssieux'),
-)
+class classlevel(models.Model):
+    class Meta:
+        db_table = 'classlevel'
+
+    name = models.CharField(max_length=30)
+
+    def __unicode__(self):
+        return self.name
+
+
+
+class school(models.Model):
+    class Meta:
+        db_table = 'school'
+
+    name = models.CharField(max_length=30)
+
+    def __unicode__(self):
+        return self.name
+
+
+
+class schoolsubject(models.Model):
+    class Meta:
+        db_table = 'schoolsubject'
+
+    name = models.CharField(max_length=30)
+
+    def __unicode__(self):
+        return self.name
 
 
 
@@ -51,9 +58,10 @@ class user(models.Model):
     mail = models.EmailField()
     phone_number = models.CharField(max_length=20)
     password = models.CharField(max_length=32)
+    school = models.ForeignKey(school)
 
     def __unicode__(self):
-        return self.nickname + "(" + self.nickname + ")"
+        return self.nickname + " (" + self.nickname + ") " + self.school.name
 
 
 
@@ -62,7 +70,7 @@ class student(user):
     class Meta:
         db_table = 'student'
 
-    grade = models.IntegerField(choices=STUDENT_TYPE_CHOICES, default=0)
+    grade = models.ForeignKey(classlevel)
 
     def __unicode__(self):
         return self.nickname + "(" + self.nickname + ")"
@@ -74,7 +82,6 @@ class professor(user):
     class Meta:
         db_table = 'professor'
 
-    school = models.IntegerField(choices=SCHOOL_TYPE_CHOICES, default=0)
     function = models.CharField(max_length=50)
 
     def __unicode__(self):
@@ -101,7 +108,7 @@ class exam (models.Model):
         db_table = 'exam'
     name = models.CharField(max_length=30)
     creation_date = models.DateField()
-    matter = models.IntegerField(choices=MATTER_TYPE_CHOICES, default=0)
+    matter = models.ForeignKey(schoolsubject)
     corrections = models.ManyToManyField('correction', through='propose', related_name='correction')
     users = models.ManyToManyField('user', through='submit', related_name='submit')
 
@@ -129,12 +136,12 @@ class classgrades (models.Model):
         db_table = 'classgrade'
     name = models.CharField(max_length=30)
     creation_date = models.DateField()
-    school = models.IntegerField(choices=SCHOOL_TYPE_CHOICES, default=0)
-    grade = models.IntegerField(choices=STUDENT_TYPE_CHOICES, default=0)
+    school = models.ForeignKey(school)
+    classlevel = models.ForeignKey(classlevel)
     examperiod = models.ManyToManyField('examperiod', through='concern', related_name='examperiod')
 
     def __unicode__(self):
-        return self.name
+        return self.name + " - " + self.classlevel.name + " (" + self.school.name + ")"
 
 
 
