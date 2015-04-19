@@ -1,6 +1,7 @@
 #-*- coding: utf-8 -*-
 
 from forms import LoginForm
+from forms import CreateUserForm
 from datetime import datetime
 from django.template import RequestContext
 from django.http import HttpResponseRedirect

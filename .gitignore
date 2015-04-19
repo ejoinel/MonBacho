@@ -5,3 +5,12 @@ settings.py
 .DS_Store
 MonBacho/.DS_Store
 *.pyc
+__init__.pyc
+MonBacho/settings.pyc
+MonBacho/wsgi.pyc
+
+*.pyc
+
+*.pyc
+
+*.pyc
