@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+
+{% block title %}Register{% endblock %} 
+{% block bodyId %}RegisterPage{% endblock %}
+{% block content %}
+
+<div class="container">
+    <fieldset class="fieldset">
+    <div class="row">
+        <div class="col-md-8">
+            <h1>Créer un compte</h1>
+            <div class="tab-content">
+                <div id="#sectionLogin" class="tab-pane fade in active">
+                    <form class="form-horizontal" action="login" method="post">{% csrf_token %}
+                        {{form.as_p}}
+                        <p>
+                            <input type="submit" value="S'inscrire" class="btn btn-default"/>
+                        </p>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    </fieldset>
+</div>
+{% endblock %}

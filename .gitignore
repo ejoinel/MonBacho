@@ -14,3 +14,19 @@ MonBacho/wsgi.pyc
 *.pyc
 
 *.pyc
+
+MonBacho/views.pyc
+
+*.pyc
+
+MonBacho/const/FORM_PROPERTIES.pyc
+
+MonBacho/urls.pyc
+
+MonBacho/views.pyc
+
+MonBacho/const/FORM_PROPERTIES.pyc
+
+MonBacho/urls.pyc
+
+MonBacho/const/ERROR_TXT.pyc
