@@ -33,17 +33,18 @@ def login( request ):
 
 def register( request ):
 
-    if len( request.GET ) < 0:
-        form = CreateUserForm( request.GET )
+    if ( request.method == "POST" ):
+        form = CreateUserForm( request.POST )
         c = {'form': form}
         if form.is_valid():
             form.save( commit=True )
-            return HttpResponseRedirect( '/register' )
+            return HttpResponseRedirect( '/login' )
         else:
             return render_to_response( 'register.html', c,
                                        context_instance=RequestContext( request ) )
 
     else:
         form = CreateUserForm()
-        return render_to_response ( 'register.html', {'form': form} )
+        c = {'form': form}
+        return render_to_response( 'register.html', c, context_instance=RequestContext( request ) )
 

@@ -1,6 +1,7 @@
 #-*- coding: utf-8 -*-
 
 from django.db import models
+from django.template.defaultfilters import default
 
 
 PERSON_SEX_CHOISE = ( 
@@ -50,13 +51,13 @@ class user( models.Model ):
         db_table = 'user'
 
     sex = models.IntegerField( choices=PERSON_SEX_CHOISE, default=0 )
-    name = models.CharField( max_length=30, default=None )
-    lastname = models.CharField( max_length=30, default=None )
+    name = models.CharField( max_length=30 )
+    lastname = models.CharField( max_length=30 )
     nickname = models.CharField( max_length=30 )
-    birth_date = models.DateField()
-    mail = models.EmailField()
-    phone_number = models.CharField( max_length=20, default=None )
-    password = models.CharField( max_length=32 )
+    birth_date = models.DateField( default=None, blank=True, null=True )
+    mail = models.EmailField( max_length=30 )
+    phone_number = models.CharField( max_length=20, blank=True, null=True )
+    password = models.CharField( max_length=30 )
     school = models.ForeignKey( school )
 
     def __unicode__( self ):

@@ -8,6 +8,15 @@ body#loginPage section#content {
 	padding: 0;
 }
 
+body#loginPage section#content { 
+	position: absolute; 
+	top: 150px; 
+	left: 50%; 
+	width: 500px; 
+	margin: 0 0 0 -550px; 
+	padding: 0;
+}
+
 form label { 
 	display: block;
 	width: 150px;
