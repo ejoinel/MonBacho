@@ -51,7 +51,7 @@ def register( request ):
         form = CreateStudentForm( request.POST )
         c = {'form': form}
         if form.is_valid():
-            nickname = form.data['nickname']
+            nickname = form.cleaned_data['nickname']
             msg = FORM_PROPERTIES.FORM_MSG_ACCOUNT_CREATED.decode( 'utf8' )
             msg = msg.replace( "name", nickname )
 
