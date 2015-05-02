@@ -1,7 +1,7 @@
 #-*- coding: utf-8 -*-
 
 from django import forms
-from MonBacho.models import user
+from MonBacho.models import student
 
 import FORM_PROPERTIES
 import ERROR_TXT
@@ -27,10 +27,10 @@ class LoginForm( forms.Form ):
 
 
 
-class CreateUserForm( forms.ModelForm ):
+class CreateStudentForm( forms.ModelForm ):
 
     def __init__( self, *args, **kwargs ):
-        super( CreateUserForm, self ).__init__( *args, **kwargs )
+        super( CreateStudentForm, self ).__init__( *args, **kwargs )
 
         self.fields['name'].label = FORM_PROPERTIES.FORM_NAME
         #self.fields['sex'].label = FORM_PROPERTIES.FORM_SEXE
@@ -41,5 +41,5 @@ class CreateUserForm( forms.ModelForm ):
         self.fields['nickname'].label = FORM_PROPERTIES.FORM_NICKNAME
 
     class Meta:
-        model = user
-        exclude = ( 'phone_number', 'birth_date', 'sex', )
+        model = student
+        exclude = ( 'phone_number', 'birth_date', 'sex', 'grade' )

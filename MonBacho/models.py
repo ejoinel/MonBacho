@@ -1,7 +1,7 @@
 #-*- coding: utf-8 -*-
 
+import DATABASE_CONF
 from django.db import models
-from django.template.defaultfilters import default
 
 
 PERSON_SEX_CHOISE = ( 
@@ -70,7 +70,7 @@ class student( user ):
     class Meta:
         db_table = 'student'
 
-    grade = models.ForeignKey( classlevel )
+    grade = models.ForeignKey( classlevel, default=DATABASE_CONF.DEFAULT_CLASSLEVEL )
 
     def __unicode__( self ):
         return self.nickname + "(" + self.nickname + ")"

@@ -12,6 +12,21 @@
 			{% block headerContent %}{% endblock %}
 		</header>
 		{% include "navbar.html" %}
+		
+		<div class="container">
+			{% if messages %}
+				<div class="row">
+					<div class='col-sm-6 col-sm-offset-3'>
+						{% for message in messages %}
+							<div{% if message.tags %} class="alert alert-{{ message.tags }}"{% endif %}>{{ message }}
+								<button type="button" class="close" data-dismiss="alert">&times;</button>
+							</div
+						{% endfor %}
+					</div>
+				</div>
+			{% endif %}
+		</div>
+		
 		<section id="content"> 
 			{% block content %}{% endblock %} 
 		</section>
