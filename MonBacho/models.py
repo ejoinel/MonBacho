@@ -50,12 +50,13 @@ class user( models.Model ):
     class Meta:
         db_table = 'user'
 
+    #slug = models.SlugField( max_length=100 )
     sex = models.IntegerField( choices=PERSON_SEX_CHOISE, default=0 )
     name = models.CharField( max_length=30 )
     lastname = models.CharField( max_length=30 )
     nickname = models.CharField( max_length=30 )
     birth_date = models.DateField( default=None, blank=True, null=True )
-    mail = models.EmailField( max_length=30 )
+    mail = models.EmailField( max_length=72 )
     phone_number = models.CharField( max_length=20, blank=True, null=True )
     password = models.CharField( max_length=30 )
     school = models.ForeignKey( school )
@@ -73,7 +74,7 @@ class student( user ):
     grade = models.ForeignKey( classlevel, default=DATABASE_CONF.DEFAULT_CLASSLEVEL )
 
     def __unicode__( self ):
-        return self.nickname + "(" + self.nickname + ")"
+        return self.nickname + "(" + self.mail + ")"
 
 
 
@@ -106,6 +107,8 @@ class exam ( models.Model ):
 
     class Meta:
         db_table = 'exam'
+
+    #slug = models.SlugField( max_length=100 )
     name = models.CharField( max_length=30 )
     creation_date = models.DateField()
     matter = models.ForeignKey( schoolsubject )

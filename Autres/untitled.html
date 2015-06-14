@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<title>[CSS3]Apparition par le bas</title>
+<style>
+html, body {
+  height:100%;
+  margin:0;
+  padding:0;
+  font-family:Verdana;
+  font-size:1em;
+}
+.figure{
+  position:relative;
+  width:216px;
+  height:90px;
+  overflow:hidden;
+  border:1px solid #ABC;
+  text-align:center;
+}
+.figure span{
+  position:absolute;
+  display:block;
+  width:100%;
+  height:100%;
+  top:100%;
+  left:0;
+  font-size:0.8em;
+  background:rgba( 0,0,0,0);
+  -webkit-transition:all 0.5s ease-in-out;
+          transition:all 0.5s ease-in-out;
+ 
+}
+.figure:hover span{
+  background:#ABC;
+  background:rgba(170, 187, 204,0.75);
+  top:0%;
+}
+</style>
+</head>
+<body>
+  <div class="figure">
+    <img src="http://www.developpez.net/template/images/logo.png" alt="">
+    <span>Texte apparaissant par le bas</span>
+  </div>
+</body>
+</html>

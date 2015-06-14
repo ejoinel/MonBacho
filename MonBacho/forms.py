@@ -1,7 +1,7 @@
 #-*- coding: utf-8 -*-
 
 from django import forms
-from MonBacho.models import student
+from MonBacho.models import student, user
 
 import FORM_PROPERTIES
 import ERROR_TXT
@@ -21,13 +21,18 @@ class LoginForm( forms.Form ):
 
         # Vérifie que les deux champs sont valides
         if email and password:
-            if password != "sesame" or email != "ejoinel@yahoo.fr":
+            if len( user.objects.filter( password=password, mail=email ) != 1 ):
                 raise forms.ValidationError( ERROR_TXT.ERROR_EMAIL_PASSWORD_BAD )
         return cleaned_data
 
 
 
 class CreateStudentForm( forms.ModelForm ):
+
+    password = forms.CharField( widget=forms.PasswordInput() )
+
+    mail = forms.EmailField( label=FORM_PROPERTIES.FORM_EMAIL,
+                              max_length=30, widget=forms.EmailInput )
 
     def __init__( self, *args, **kwargs ):
         super( CreateStudentForm, self ).__init__( *args, **kwargs )
@@ -43,3 +48,17 @@ class CreateStudentForm( forms.ModelForm ):
     class Meta:
         model = student
         exclude = ( 'phone_number', 'birth_date', 'sex', 'grade' )
+
+    def clean( self ):
+
+        cleaned_data = super ( CreateStudentForm, self ).clean()
+        mail = cleaned_data.get( "mail" )
+        nickname = cleaned_data.get( "nickname" )
+
+        # Vérifie que les deux champs sont valides
+        if ( len( user.objects.filter( mail=mail ) ) > 0 ):
+            raise forms.ValidationError( FORM_PROPERTIES.FORM_MAIL_USED )
+
+        if ( len( user.objects.filter( nickname=nickname ) ) > 0 ):
+            raise forms.ValidationError( FORM_PROPERTIES.FORM_NICKNAME_USED )
+        return cleaned_data
