@@ -1,6 +1,6 @@
 #-*- coding: utf-8 -*-
 
-import DATABASE_CONF
+#import DATABASE_CONF
 from django.db import models
 
 
@@ -50,15 +50,17 @@ class user( models.Model ):
     class Meta:
         db_table = 'user'
 
-    #slug = models.SlugField( max_length=100 )
+    slug = models.SlugField( max_length=100 )
     sex = models.IntegerField( choices=PERSON_SEX_CHOISE, default=0 )
-    name = models.CharField( max_length=30 )
+    firstname = models.CharField( max_length=30 )
     lastname = models.CharField( max_length=30 )
     nickname = models.CharField( max_length=30 )
+    creation_date = models.DateTimeField( auto_now_add=True, blank=True )
     birth_date = models.DateField( default=None, blank=True, null=True )
+    modification_date = models.DateTimeField( auto_now_add=True, blank=True )
     mail = models.EmailField( max_length=72 )
     phone_number = models.CharField( max_length=20, blank=True, null=True )
-    password = models.CharField( max_length=30 )
+    password = models.CharField( max_length=100 )
     school = models.ForeignKey( school )
 
     def __unicode__( self ):
@@ -71,7 +73,7 @@ class student( user ):
     class Meta:
         db_table = 'student'
 
-    grade = models.ForeignKey( classlevel, default=DATABASE_CONF.DEFAULT_CLASSLEVEL )
+    grade = models.ForeignKey( classlevel, default=1 )
 
     def __unicode__( self ):
         return self.nickname + "(" + self.mail + ")"

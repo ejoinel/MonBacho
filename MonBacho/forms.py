@@ -37,7 +37,7 @@ class CreateStudentForm( forms.ModelForm ):
     def __init__( self, *args, **kwargs ):
         super( CreateStudentForm, self ).__init__( *args, **kwargs )
 
-        self.fields['name'].label = FORM_PROPERTIES.FORM_NAME
+        self.fields['firstname'].label = FORM_PROPERTIES.FORM_NAME
         #self.fields['sex'].label = FORM_PROPERTIES.FORM_SEXE
         self.fields['lastname'].label = FORM_PROPERTIES.FORM_LASTNAME
         self.fields['mail'].label = FORM_PROPERTIES.FORM_EMAIL
@@ -47,7 +47,7 @@ class CreateStudentForm( forms.ModelForm ):
 
     class Meta:
         model = student
-        exclude = ( 'phone_number', 'birth_date', 'sex', 'grade' )
+        exclude = ( 'phone_number', 'birth_date', 'sex', 'grade', 'creation_date', 'slug' )
 
     def clean( self ):
 
