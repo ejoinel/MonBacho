@@ -79,6 +79,7 @@ class document( models.Model ):
     slug = models.SlugField( max_length=100 )
     user = models.ForeignKey( user )
     level = models.ForeignKey( classlevel )
+    school = models.ForeignKey( school )
     nb_views = models.IntegerField( default=0 )
     name = models.CharField( max_length=100 )
     status = models.IntegerField( default=-1 )
@@ -133,7 +134,7 @@ class submit ( models.Model ):
     class Meta:
         db_table = 'submit'
     submit_date = models.DateTimeField( auto_now_add=True )
-    document = models.ForeignKey( exam, related_name='submit_document' )
+    document = models.ForeignKey( document, related_name='submit_document' )
     user = models.ForeignKey( user, related_name='submit_user' )
 
     def __unicode__( self ):
@@ -147,7 +148,7 @@ class comment ( models.Model ):
         db_table = 'comment'
     comment_date = models.DateTimeField( auto_now_add=True )
     comment = models.TextField( max_length=512 )
-    document = models.ForeignKey( exam, related_name='comment_document' )
+    document = models.ForeignKey( document, related_name='comment_document' )
     user = models.ForeignKey( user, related_name='comment_user' )
 
     def __unicode__( self ):
