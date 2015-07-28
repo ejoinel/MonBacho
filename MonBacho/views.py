@@ -6,7 +6,7 @@ from forms import LoginForm
 from datetime import datetime
 from MonBacho.models import user
 from django.contrib import messages
-from forms import CreateStudentForm
+from forms import UserForm
 from django.template import RequestContext
 from django.http import HttpResponseRedirect
 from django.shortcuts import render_to_response
@@ -64,7 +64,7 @@ def login( request ):
 def register( request ):
 
     if ( request.method == "POST" ):
-        form = CreateStudentForm( request.POST )
+        form = UserForm( request.POST )
         c = {'form': form}
         error_form = False
 
@@ -105,7 +105,7 @@ def register( request ):
                                        context_instance=RequestContext( request ) )
 
     else:
-        form = CreateStudentForm()
+        form = UserForm()
         c = {'form': form}
         return render_to_response( 'register.html', c,
                                    context_instance=RequestContext( request ) )
