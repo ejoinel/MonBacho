@@ -38,9 +38,9 @@ class school( models.Model ):
 
 
 
-class schoolsubject( models.Model ):
+class classtopic( models.Model ):
     class Meta:
-        db_table = 'schoolsubject'
+        db_table = 'classtopic'
 
     name = models.CharField( max_length=30 )
 
@@ -91,12 +91,20 @@ class document( models.Model ):
 
 
 
+class image( models.Model ):
+    class Meta:
+        db_table = 'image'
+    file_path = models.CharField( max_length=100 )
+    document = models.ForeignKey( document, null=True, blank=True, default=None )
+
+
+
 class exam ( document ):
 
     class Meta:
         db_table = 'exam'
 
-    matter = models.ForeignKey( schoolsubject )
+    matter = models.ForeignKey( classtopic )
 
     def __unicode__( self ):
         return self.name + " " + self.matter

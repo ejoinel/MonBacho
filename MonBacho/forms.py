@@ -1,11 +1,12 @@
 #-*- coding: utf-8 -*-
 
 from django import forms
-from MonBacho.models import user
+from MonBacho.models import user, exam
 
 import FORM_PROPERTIES
 import ERROR_TXT
 
+# Formulaire login
 class LoginForm( forms.Form ):
 
     email = forms.EmailField( label=FORM_PROPERTIES.FORM_EMAIL,
@@ -27,6 +28,7 @@ class LoginForm( forms.Form ):
 
 
 
+# Fomulaire création d'utilisateur
 class UserForm( forms.ModelForm ):
 
     password = forms.CharField( widget=forms.PasswordInput() )
@@ -47,7 +49,8 @@ class UserForm( forms.ModelForm ):
 
     class Meta:
         model = user
-        exclude = ( 'phone_number', 'birth_date', 'sex', 'creation_date', 'slug', 'modification_date' )
+        exclude = ( 'phone_number', 'birth_date', 'sex', 'creation_date',
+                    'slug', 'modification_date' )
 
     def clean( self ):
 
@@ -62,3 +65,18 @@ class UserForm( forms.ModelForm ):
         if ( len( user.objects.filter( nickname=nickname ) ) > 0 ):
             raise forms.ValidationError( FORM_PROPERTIES.FORM_NICKNAME_USED )
         return cleaned_data
+
+
+
+class UploadFileForm( forms.Form ):
+    file = forms.FileField()
+
+
+
+#Formulaire création d'examen
+class CreateExamForm( forms.ModelForm ):
+
+    class Meta:
+        model = exam
+        exclude = ( "user", "nb_views", "name", "status",
+                   "creation_date", "deletion_date" )

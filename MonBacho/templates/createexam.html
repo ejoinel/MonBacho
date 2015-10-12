@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+
+{% block title %}CreateExam{% endblock %} 
+{% block bodyId %}CreateExam{% endblock %}
+{% block content %}
+
+<div class="container">
+    <fieldset class="fieldset">
+    <div class="row">
+        <div class="col-xs-12">
+            <h1>Enregistrer un examen</h1>
+            <div class="tab-content">
+            	<div id="#createexam" class="tab-pane fade in active">
+					<form class="form-horizontal" action="createexam" method="post">{% csrf_token %}
+					    {{ examform.as_p }}
+					    <!-- Champs utilisés par le mécanisme formset de Django -->
+						{{ sortedfilesform.management_form }}
+					    {% for f_form in sortedfilesform %}
+					        {{ f_form.as_p }}
+					    {% endfor %}
+					</form>
+                </div>
+            </div>
+        </div>
+    </div>
+    </fieldset>
+</div>
+{% endblock %}

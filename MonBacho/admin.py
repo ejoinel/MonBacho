@@ -1,7 +1,7 @@
 #-*- coding: utf-8 -*-
 
 from django.contrib import admin
-from MonBacho.models import document, exam, user, correction, read, submit, comment, classlevel, school, schoolsubject
+from MonBacho.models import document, exam, user, correction, read, submit, comment, classlevel, school, classtopic
 
 class useradmin( admin.ModelAdmin ):
     list_display = ( 'firstname', 'mail', 'school' )
@@ -12,7 +12,7 @@ class useradmin( admin.ModelAdmin ):
 
 admin.site.register( document )
 admin.site.register( submit )
-admin.site.register( schoolsubject )
+admin.site.register( classtopic )
 admin.site.register( correction )
 admin.site.register( read )
 admin.site.register( comment )

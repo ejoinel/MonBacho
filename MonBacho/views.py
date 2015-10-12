@@ -2,11 +2,11 @@
 
 import FORM_PROPERTIES
 
-from forms import LoginForm
+from django.forms.formsets import formset_factory
+from forms import LoginForm, UserForm, CreateExamForm, UploadFileForm
 from datetime import datetime
 from MonBacho.models import user
 from django.contrib import messages
-from forms import UserForm
 from django.template import RequestContext
 from django.http import HttpResponseRedirect
 from django.shortcuts import render_to_response
@@ -59,6 +59,29 @@ def login( request ):
         return render_to_response( 'login.html', c,
                                    context_instance=RequestContext( request ) )
 
+
+
+def createexam( request ):
+
+    # Creation du formulaire + upload des images
+    examform = CreateExamForm()
+
+    #Création du formset avec n itération : extra=2
+    sortedfilesform = formset_factory( UploadFileForm, extra=2 )
+
+    if ( request.method == "POST" ):
+        form = CreateExamForm( request.POST )
+        c = {'form': form}
+
+        if form.is_valid():
+            print( "Super" )
+        else:
+            form = CreateExamForm()
+            c = {'form': form}
+
+    return render_to_response( 'createexam.html', {'form':examform,
+                                                'sorteForm':sortedfilesform},
+                               context_instance=RequestContext( request ) )
 
 
 def register( request ):
