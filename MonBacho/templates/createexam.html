@@ -11,12 +11,12 @@
             <h1>Enregistrer un examen</h1>
             <div class="tab-content">
             	<div id="#createexam" class="tab-pane fade in active">
-					<form class="form-horizontal" action="createexam" method="post">{% csrf_token %}
-					    {{ examform.as_p }}
+					<form class="form-inline" action="createexam" method="post">{% csrf_token %}
+					    {{ form.as_p }}
 					    <!-- Champs utilisés par le mécanisme formset de Django -->
-						{{ sortedfilesform.management_form }}
-					    {% for f_form in sortedfilesform %}
-					        {{ f_form.as_p }}
+						{{ sortedForm.management_form }}
+					    {% for f_form in sortedForm %}
+					        {{ f_form }}
 					    {% endfor %}
 					</form>
                 </div>

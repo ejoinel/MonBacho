@@ -13,6 +13,7 @@ from django.shortcuts import render_to_response
 from django.contrib.messages import constants as message_constants
 from __builtin__ import False
 from django.contrib.auth.hashers import make_password
+from django.shortcuts import render
 
 
 MESSAGE_TAGS = {message_constants.DEBUG: 'debug',
@@ -64,11 +65,13 @@ def login( request ):
 def createexam( request ):
 
     # Creation du formulaire + upload des images
-    examform = CreateExamForm()
+    examform = CreateExamForm( auto_id=True )
 
     #Création du formset avec n itération : extra=2
-    sortedfilesform = formset_factory( UploadFileForm, extra=2 )
+    sortedfilesform = formset_factory( UploadFileForm, extra=3 )
 
+    #Récupération du formulaire géré par le mécanisme formset
+    formset = sortedfilesform()
     if ( request.method == "POST" ):
         form = CreateExamForm( request.POST )
         c = {'form': form}
@@ -78,10 +81,9 @@ def createexam( request ):
         else:
             form = CreateExamForm()
             c = {'form': form}
-
-    return render_to_response( 'createexam.html', {'form':examform,
-                                                'sorteForm':sortedfilesform},
-                               context_instance=RequestContext( request ) )
+    else:
+        context = {'form': examform, 'sortedForm': formset, }
+        return render( request, 'createexam.html', context )
 
 
 def register( request ):

@@ -10,6 +10,8 @@ PERSON_SEX_CHOISE = (
     ( '2', 'Mlle' )
  )
 
+EXAM_YEAR_CHOICES = ( '2015', '2014', '2014', '2013', '2012', '2011', '2010' )
+#year = forms.ChoiceField(choices=[(x, x) for x in range(1900, 2000)], required=False)
 
 
 class classlevel( models.Model ):

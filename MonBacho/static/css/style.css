@@ -1,5 +1,5 @@
 
-body#loginPage section#content { 
+body#CreateExam section#content { 
 	position: absolute; 
 	top: 150px; 
 	left: 50%; 
@@ -28,6 +28,12 @@ form label {
 form input[type="email"], form input[type="text"], form input[type="password"]{
 	display: block;
 	width: 200px; 
+	padding: 2px;
+}
+
+form select {
+	display: block;
+	width: 100px; 
 	padding: 2px;
 }
 

@@ -78,5 +78,5 @@ class CreateExamForm( forms.ModelForm ):
 
     class Meta:
         model = exam
-        exclude = ( "user", "nb_views", "name", "status",
-                   "creation_date", "deletion_date" )
+        exclude = ( "slug", "user", "nb_views", "name", "status",
+                    "creation_date", "deletion_date" )
