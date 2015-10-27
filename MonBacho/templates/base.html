@@ -18,9 +18,9 @@
 				<div class="row">
 					<div class='col-sm-6 col-sm-offset-3'>
 						{% for message in messages %}
-							<div{% if message.tags %} class="alert alert-{{ message.tags }} alert-dismissible" role="alert"{% endif %}>{{ message }}
+							<div {% if message.tags %} class="alert alert-{{ message.tags }} alert-dismissible" role="alert"{% endif %}>{{ message }}>
 								<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-							</div
+							</div>
 						{% endfor %}
 					</div>
 				</div>
@@ -34,12 +34,32 @@
 	    <script src="{% static 'js/bootstrap.min.js' %}"></script>
 	    <script type="text/javascript" >
 	    	$(document).ready(function(){
-		        $("#id_password").attr('placeholder', 'Mot de passe');
-		        $("#id_email").attr('placeholder', 'Email');
+	    		$('#login-form-link').click();
 		        $("#id_name").attr('placeholder', 'Nom');
 		        $("#id_lastname").attr('placeholder', 'Prenom');
 		        $("#id_nickname").attr('placeholder', 'Pseudo');
 		        $("#id_mail").attr('placeholder', 'Email');
+		        if ($('#register-form-link').hasClass('active')){
+		        	$('#register-form-link').click();
+		        }
+		        else{
+		        	$('#login-form-link').click();
+		        }
+		        	
+		        $('#login-form-link').click(function(e) {
+		    		$("#login-form").delay(100).fadeIn(100);
+		     		$("#register-form").fadeOut(100);
+		    		$('#register-form-link').removeClass('active');
+		    		$(this).addClass('active');
+		    		e.preventDefault();
+		    	});
+		    	$('#register-form-link').click(function(e) {
+		    		$("#register-form").delay(100).fadeIn(100);
+		     		$("#login-form").fadeOut(100);
+		    		$('#login-form-link').removeClass('active');
+		    		$(this).addClass('active');
+		    		e.preventDefault();
+		    	});
 	    	});
     	</script>
 	</body>

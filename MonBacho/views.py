@@ -34,7 +34,8 @@ def login( request ):
     # Test si le fomulaire a été envoyé
     if ( request.method == "POST" ):
         form = LoginForm( request.POST )
-        c = {'form': form}
+        user_form = UserForm( request.POST )
+        context = {'form': form, 'user_form': user_form, }
 
         if form.is_valid():
             password = form.cleaned_data['password']
@@ -43,7 +44,7 @@ def login( request ):
             if( len( user.objects.filter( password=password, mail=email ) ) != 1 ):
                 messages.add_message( request, messages.WARNING,
                                       FORM_PROPERTIES.FORM_LOGIN_FAILED )
-                return render_to_response( 'login.html', c,
+                return render_to_response( template_name='login.html', context=context,
                                            context_instance=RequestContext( request ) )
             #user_connected = user.objects.get( password=password, mail=email ).nickname
 
@@ -52,12 +53,13 @@ def login( request ):
             msg = FORM_PROPERTIES.FORM_LOGIN_FAILED
 
             messages.add_message( request, messages.WARNING, msg )
-            return render_to_response( 'login.html', c,
+            return render_to_response( template_name='login.html', context=context,
                                        context_instance=RequestContext( request ) )
     else:
         form = LoginForm()
-        c = {'form': form}
-        return render_to_response( 'login.html', c,
+        user_form = UserForm()
+        context = {'form': form, 'user_form': user_form, }
+        return render_to_response( template_name='login.html', context=context,
                                    context_instance=RequestContext( request ) )
 
 

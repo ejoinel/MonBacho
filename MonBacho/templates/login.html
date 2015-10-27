@@ -1,35 +1,39 @@
 {% extends "base.html" %}
+{% load crispy_forms_tags %}
 
 {% block title %}Connexion{% endblock %} 
 {% block bodyId %}LoginPage{% endblock %}
 {% block content %}
 
-<div class="container">
-    <fieldset class="fieldset">
-    <div class="row">
-        <div class="col-xs-6">
-            <h1>Connexion</h1>
-            <div class="tab-content">
-                <div id="#sectionLogin" class="tab-pane fade in active">
-                    <form class="form-horizontal" action="login" method="post">{% csrf_token %}
-                        {{form.as_p}}
-                        <p>
-                            <input type="submit" value="Connexion" class="btn btn-default"/>
-                        </p>
-                    </form>
-                </div>
-            </div>
-        </div>
-        <div class="col-xs-6">
-            <p>Cette interface vous permet de gérer les fonctionnalités liées:
-•
-à votre abonnement Freebox, en vous identifiant à l'aide de votre numéro de téléphone fixe, votre numéro Freebox ou votre idenfiant commençant par "fbx" et du mot de passe associé.
-•
-à votre abonnement Free 50 Heures, en vous identifiant avec votre numéro de téléphone fixe et du mot de passe associé. Si vous disposez d'un abonnement Free 50 Heures et d'un abonnement Freebox au même numéro, veuillez n'indiquer que votre numéro de ligne.
-•
-à votre compte eMail, en vous identifiant avec ce qui précède @free.fr et du mot de passe associé.</p>
-        </div>
-    </div>
-    </fieldset>
+<div id="login-overlay" class="modal-dialog">
+	<div class="modal-content">
+	    <div class="modal-header">
+	        <h4 class="modal-title" id="myModalLabel">Login to <b>YaelsEverythingStore.com</b></h4> or go back to our <a href="./index.jsp">main site</a>.
+	    </div>
+	    <div class="modal-body">
+	        <div class="row">
+	            <div class="col-xs-6">
+	                <div class="well">
+	                    <form id="loginForm" method="POST">
+                            {% crispy form %}
+	                    </form>
+	                </div>
+	            </div>
+	            <div class="col-xs-6">
+	                <p class="lead">Register now for <span class="text-success">FREE</span></p>
+	                <ul class="list-unstyled" style="line-height: 2">
+	                    <li><span class="fa fa-check text-success"></span> See all your orders</li>
+	                    <li><span class="fa fa-check text-success"></span> Shipping is always free</li>
+	                    <li><span class="fa fa-check text-success"></span> Save your favorites</li>
+	                    <li><span class="fa fa-check text-success"></span> Fast checkout</li>
+	                    <li><span class="fa fa-check text-success"></span> Get a gift <small>(only new customers)</small></li>
+	                    <li><span class="fa fa-check text-success"></span>Holiday discounts up to 30% off</li>
+	                </ul>
+	                <p><a href="./Register.jsp" class="btn btn-info btn-block">Yes please, register now!</a></p>
+	            </div>
+	        </div>
+	    </div>
+	</div>
+
 </div>
 {% endblock %}

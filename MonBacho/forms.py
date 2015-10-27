@@ -1,19 +1,35 @@
 #-*- coding: utf-8 -*-
 
 from django import forms
+
+from crispy_forms.helper import FormHelper
+from crispy_forms.layout import Submit, Layout, Field, HTML
+from crispy_forms.bootstrap import ( PrependedText,
+                                    PrependedAppendedText, FormActions )
+
 from MonBacho.models import user, exam
 
 import FORM_PROPERTIES
 import ERROR_TXT
 
+
+
 # Formulaire login
 class LoginForm( forms.Form ):
 
     email = forms.EmailField( label=FORM_PROPERTIES.FORM_EMAIL,
-                              max_length=30, widget=forms.EmailInput )
+                              max_length=30, widget=forms.EmailInput( attrs={'placeholder': 'entrer@login.com'} ),
+                              required=True )
 
     password = forms.CharField( label=FORM_PROPERTIES.FORM_PASSWORD,
-                                widget=forms.PasswordInput, max_length=30 )
+                                required=True, widget=forms.PasswordInput( attrs={'placeholder': 'Mot de passe'} ), max_length=30 )
+    #remember = forms.BooleanField( label="Se souvenir de moi?" )
+
+    helper = FormHelper()
+    helper.form_id = 'login-form'
+    helper.form_show_labels = False
+    helper.add_input( Submit( 'login', 'Connexion', css_class='btn btn-success btn-block' ) )
+    #helper.layout( PrependedText( 'field_1', '@', placeholder="username" ) )
 
     def clean( self ):
         cleaned_data = super ( LoginForm, self ).clean()
@@ -46,6 +62,11 @@ class UserForm( forms.ModelForm ):
         self.fields['password'].label = FORM_PROPERTIES.FORM_PASSWORD
         self.fields['school'].label = FORM_PROPERTIES.FORM_SCHOOL
         self.fields['nickname'].label = FORM_PROPERTIES.FORM_NICKNAME
+
+    helper = FormHelper()
+    helper.form_id = 'register-form'
+    helper.form_show_labels = False
+    helper.add_input( Submit( 'register', "S'inscrire", css_class='form-control btn btn-login' ) )
 
     class Meta:
         model = user
