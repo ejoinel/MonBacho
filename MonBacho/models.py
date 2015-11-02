@@ -1,212 +1,180 @@
-#-*- coding: utf-8 -*-
+# -*- coding: utf-8 -*-
 
+# import DATABASE_CONF
 from django.db import models
-from django.template.defaultfilters import default
-
-
-PERSON_SEX_CHOISE = ( 
-    ( '0', 'Mr' ),
-    ( '1', 'Mme' ),
-    ( '2', 'Mlle' )
- )
 
 
 
-class classlevel( models.Model ):
+PERSON_SEX_CHOICE = (('0', 'Mr'), ('1', 'Mme'), ('2', 'Mlle'))
+
+EXAM_YEAR_CHOICES = ('2015', '2014', '2014', '2013', '2012', '2011', '2010')
+# year = forms.ChoiceField(choices=[(x, x) for x in range(1900, 2000)], required=False)
+
+
+
+class ClassLevel( models.Model ):
     class Meta:
-        db_table = 'classlevel'
+        db_table = 'ClassLevel'
 
     name = models.CharField( max_length=30 )
+    sub_category = models.CharField( max_length=30 )
 
-    def __unicode__( self ):
+
+
+    def __unicode__(self):
+        if self.sub_category:
+            return self.name + "(" + self.sub_category + ")"
+        else:
+            return self.name
+
+
+
+class School( models.Model ):
+    class Meta:
+        db_table = 'School'
+
+    name = models.CharField( max_length=100 )
+
+
+
+    def __unicode__(self):
         return self.name
 
 
 
-class school( models.Model ):
+class ClassTopic( models.Model ):
     class Meta:
-        db_table = 'school'
+        db_table = 'ClassTopic'
 
     name = models.CharField( max_length=30 )
 
-    def __unicode__( self ):
+
+
+    def __unicode__(self):
         return self.name
 
 
 
-class schoolsubject( models.Model ):
-    class Meta:
-        db_table = 'schoolsubject'
-
-    name = models.CharField( max_length=30 )
-
-    def __unicode__( self ):
-        return self.name
-
-
-
-class user( models.Model ):
+class User( models.Model ):
 
     class Meta:
-        db_table = 'user'
+        db_table = 'User'
 
-    sex = models.IntegerField( choices=PERSON_SEX_CHOISE, default=0 )
-    name = models.CharField( max_length=30 )
+    slug = models.SlugField( max_length=100 )
+    school = models.OneToOneField( School, null=True, blank=True )
+    sex = models.IntegerField( choices=PERSON_SEX_CHOICE, default=0 )
+    firstname = models.CharField( max_length=30 )
     lastname = models.CharField( max_length=30 )
     nickname = models.CharField( max_length=30 )
+    mail = models.EmailField( max_length=72 )
+    password = models.CharField( max_length=100 )
+    nb_points = models.IntegerField( default=0 )
     birth_date = models.DateField( default=None, blank=True, null=True )
-    mail = models.EmailField( max_length=30 )
-    phone_number = models.CharField( max_length=20, blank=True, null=True )
-    password = models.CharField( max_length=30 )
-    school = models.ForeignKey( school )
+    creation_date = models.DateTimeField( auto_now_add=True, blank=True )
+    modification_date = models.DateTimeField( auto_now_add=True, blank=True )
 
     def __unicode__( self ):
         return self.nickname + " (" + self.nickname + ") " + self.school.name
 
 
 
-class student( user ):
-
+class Document( models.Model ):
     class Meta:
-        db_table = 'student'
+        db_table = 'Document'
 
-    grade = models.ForeignKey( classlevel )
+    slug = models.SlugField( max_length=100 )
+    user = models.ForeignKey( User )
+    level = models.ForeignKey( ClassLevel )
+    school = models.ForeignKey( School )
+    nb_views = models.IntegerField( default=0 )
+    name = models.CharField( max_length=100 )
+    status = models.IntegerField( default=-1 )
+    creation_date = models.DateTimeField( auto_now_add=True )
+    deletion_date = models.DateTimeField( auto_now_add=True )
 
-    def __unicode__( self ):
-        return self.nickname + "(" + self.nickname + ")"
+
+
+    def __unicode__(self):
+        return self.name + " (" + self.status + ") " + self.school.name
 
 
 
-class professor( user ):
-
+class Image( models.Model ):
     class Meta:
-        db_table = 'professor'
+        db_table = 'Image'
 
-    function = models.CharField( max_length=50 )
-
-    def __unicode__( self ):
-        return self.sex + " " + self.nickname + "(" + self.nickname + ")"
+    file_path = models.CharField( max_length=100 )
+    document = models.ForeignKey( Document, null=True, blank=True, default=None )
 
 
 
-class correction( models.Model ):
-
+class Exam( Document ):
     class Meta:
-        db_table = 'correction'
+        db_table = 'Exam'
 
-    creation_date = models.DateField()
-    fields = models.CharField( max_length=50 )
-
-    def __unicode__( self ):
-        return self.fields + " " + self.creation_date
+    matter = models.ForeignKey( ClassTopic )
 
 
 
-class exam ( models.Model ):
-
-    class Meta:
-        db_table = 'exam'
-    name = models.CharField( max_length=30 )
-    creation_date = models.DateField()
-    matter = models.ForeignKey( schoolsubject )
-    corrections = models.ManyToManyField( 'correction', through='propose', related_name='correction' )
-    users = models.ManyToManyField( 'user', through='submit', related_name='submit' )
-
-    def __unicode__( self ):
+    def __unicode__(self):
         return self.name + " " + self.matter
 
 
 
-class examperiod ( models.Model ):
-
+class Correction( Document ):
     class Meta:
-        db_table = 'examperiod'
-    name = models.CharField( max_length=30 )
-    mock_exam = models.BooleanField( default=True )
-    examens = models.ManyToManyField( 'exam', through='concern', related_name='exam' )
+        db_table = 'Correction'
 
-    def __unicode__( self ):
-        return self.name + " " + self.is_real_examen
+    exam = models.ForeignKey( Exam )
+    text = models.TextField( max_length=1024 )
 
 
 
-class classgrades ( models.Model ):
+    def __unicode__(self):
+        return "{} correction du sujet {}".format( self.id, Exam.id )
 
+
+
+class Read( models.Model ):
     class Meta:
-        db_table = 'classgrade'
-    name = models.CharField( max_length=30 )
-    creation_date = models.DateField()
-    school = models.ForeignKey( school )
-    classlevel = models.ForeignKey( classlevel )
-    examperiod = models.ManyToManyField( 'examperiod', through='concern', related_name='examperiod' )
+        db_table = 'Read'
 
-    def __unicode__( self ):
-        return self.name + " - " + self.classlevel.name + " (" + self.school.name + ")"
+    read_date = models.DateTimeField( auto_now_add=True )
+    document = models.ForeignKey( Document, related_name='read_document' )
+    user = models.ForeignKey( User, related_name='read_user' )
 
 
 
-class concern ( models.Model ):
+    def __unicode__(self):
+        return self.user.name + " - " + self.document.name + " (" + self.read_date + ")"
 
+
+
+class Submit( models.Model ):
     class Meta:
-        db_table = 'concern'
-    exam_date = models.DateField()
-    exam = models.ForeignKey( exam, related_name='concern_exam' )
-    examperiod = models.ForeignKey( examperiod, related_name='concern_period' )
-    classgrade = models.ForeignKey( classgrades, related_name='concern_class' )
+        db_table = 'Submit'
 
-    def __unicode__( self ):
-        return self.exam_date + " - " + self.examperiod.name + " (" + self.classgrade.name + "," + self.exam.name + ")"
+    submit_date = models.DateTimeField( auto_now_add=True )
+    document = models.ForeignKey( Document, related_name='submit_document' )
+    user = models.ForeignKey( User, related_name='submit_user' )
 
 
 
-class read ( models.Model ):
+    def __unicode__(self):
+        return self.user.name + " - " + self.document.name + " (" + self.submit_date + ")"
 
+
+
+class Comment( models.Model ):
     class Meta:
-        db_table = 'read'
-    read_date = models.DateField()
-    exam = models.ForeignKey( exam, related_name='read_exam' )
-    user = models.ForeignKey( user, related_name='read_user' )
+        db_table = 'Comment'
 
-    def __unicode__( self ):
-        return self.user.name + " - " + self.exam.name + " (" + self.read_date + ")"
-
-
-
-class submit ( models.Model ):
-
-    class Meta:
-        db_table = 'submit'
-    submit_date = models.DateField()
-    exam = models.ForeignKey( exam, related_name='submit_exam' )
-    user = models.ForeignKey( user, related_name='submit_user' )
-
-    def __unicode__( self ):
-        return self.user.name + " - " + self.exam.name + " (" + self.submit_date + ")"
+    comment_date = models.DateTimeField( auto_now_add=True )
+    comment = models.TextField( max_length=512 )
+    document = models.ForeignKey( Document, related_name='comment_document' )
+    user = models.ForeignKey( User, related_name='comment_user' )
 
 
 
-class comment ( models.Model ):
-
-    class Meta:
-        db_table = 'comment'
-    comment_date = models.DateField()
-    comment = models.TextField( max_length=30 )
-    exam = models.ForeignKey( exam, related_name='comment_exam' )
-    user = models.ForeignKey( user, related_name='comment_read' )
-
-    def __unicode__( self ):
-        return self.user.name + " - " + self.exam.name + " - " + self.comment + " (" + self.comment_date + ")"
-
-
-
-class propose( models.Model ):
-
-    class Meta:
-        db_table = 'propose'
-    proposition_date = models.DateField()
-    correction = models.ForeignKey( correction, related_name='propose_correction' )
-    exam = models.ForeignKey( exam, related_name='propose_exam' )
-    user = models.ForeignKey( user, related_name='propose_user' )
-
-    def __unicode__( self ):
-        return self.user.name + " - " + self.exam.name + self.correction.fields + " (" + self.comment_date + ")"
+    def __unicode__(self):
+        return self.user.name + " - " + self.document.name + " - " + self.comment + " (" + self.comment_date + ")"

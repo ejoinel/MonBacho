@@ -24,3 +24,5 @@ DB_READ_PSWRD = "nous_pau"
 DB_READ_NAME = "sikolo"
 DB_READ_HOST = "localhost"
 DB_READ_PORT = "3306"
+
+DEFAULT_CLASSLEVEL = 1

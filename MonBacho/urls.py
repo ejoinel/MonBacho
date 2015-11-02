@@ -2,7 +2,7 @@
 
 from django.conf.urls import url, include
 
-from views import login, welcome, register
+from views import login, welcome, register, createexam
 from django.contrib import admin
 
 admin.autodiscover()
@@ -16,5 +16,6 @@ urlpatterns = [
     url( r'^welcome$', welcome ),
     url( r'^login$', login ),
     url( r'^register$', register ),
+    url( r'^createexam$', createexam ),
     url( r'^admin', include( admin.site.urls ) ),
 ]
