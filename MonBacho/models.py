@@ -1,27 +1,27 @@
-#-*- coding: utf-8 -*-
+# -*- coding: utf-8 -*-
 
-#import DATABASE_CONF
+# import DATABASE_CONF
 from django.db import models
 
 
-PERSON_SEX_CHOISE = ( 
-    ( '0', 'Mr' ),
-    ( '1', 'Mme' ),
-    ( '2', 'Mlle' )
- )
 
-EXAM_YEAR_CHOICES = ( '2015', '2014', '2014', '2013', '2012', '2011', '2010' )
-#year = forms.ChoiceField(choices=[(x, x) for x in range(1900, 2000)], required=False)
+PERSON_SEX_CHOICE = (('0', 'Mr'), ('1', 'Mme'), ('2', 'Mlle'))
+
+EXAM_YEAR_CHOICES = ('2015', '2014', '2014', '2013', '2012', '2011', '2010')
+# year = forms.ChoiceField(choices=[(x, x) for x in range(1900, 2000)], required=False)
 
 
-class classlevel( models.Model ):
+
+class ClassLevel( models.Model ):
     class Meta:
-        db_table = 'classlevel'
+        db_table = 'ClassLevel'
 
     name = models.CharField( max_length=30 )
     sub_category = models.CharField( max_length=30 )
 
-    def __unicode__( self ):
+
+
+    def __unicode__(self):
         if self.sub_category:
             return self.name + "(" + self.sub_category + ")"
         else:
@@ -29,36 +29,40 @@ class classlevel( models.Model ):
 
 
 
-class school( models.Model ):
+class School( models.Model ):
     class Meta:
-        db_table = 'school'
+        db_table = 'School'
 
     name = models.CharField( max_length=100 )
 
-    def __unicode__( self ):
+
+
+    def __unicode__(self):
         return self.name
 
 
 
-class classtopic( models.Model ):
+class ClassTopic( models.Model ):
     class Meta:
-        db_table = 'classtopic'
+        db_table = 'ClassTopic'
 
     name = models.CharField( max_length=30 )
 
-    def __unicode__( self ):
+
+
+    def __unicode__(self):
         return self.name
 
 
 
-class user( models.Model ):
+class User( models.Model ):
 
     class Meta:
-        db_table = 'user'
+        db_table = 'User'
 
     slug = models.SlugField( max_length=100 )
-    school = models.OneToOneField( school, null=True, blank=True )
-    sex = models.IntegerField( choices=PERSON_SEX_CHOISE, default=0 )
+    school = models.OneToOneField( School, null=True, blank=True )
+    sex = models.IntegerField( choices=PERSON_SEX_CHOICE, default=0 )
     firstname = models.CharField( max_length=30 )
     lastname = models.CharField( max_length=30 )
     nickname = models.CharField( max_length=30 )
@@ -74,93 +78,103 @@ class user( models.Model ):
 
 
 
-class document( models.Model ):
+class Document( models.Model ):
     class Meta:
-        db_table = 'document'
+        db_table = 'Document'
 
     slug = models.SlugField( max_length=100 )
-    user = models.ForeignKey( user )
-    level = models.ForeignKey( classlevel )
-    school = models.ForeignKey( school )
+    user = models.ForeignKey( User )
+    level = models.ForeignKey( ClassLevel )
+    school = models.ForeignKey( School )
     nb_views = models.IntegerField( default=0 )
     name = models.CharField( max_length=100 )
     status = models.IntegerField( default=-1 )
     creation_date = models.DateTimeField( auto_now_add=True )
     deletion_date = models.DateTimeField( auto_now_add=True )
 
-    def __unicode__( self ):
+
+
+    def __unicode__(self):
         return self.name + " (" + self.status + ") " + self.school.name
 
 
 
-class image( models.Model ):
+class Image( models.Model ):
     class Meta:
-        db_table = 'image'
+        db_table = 'Image'
+
     file_path = models.CharField( max_length=100 )
-    document = models.ForeignKey( document, null=True, blank=True, default=None )
+    document = models.ForeignKey( Document, null=True, blank=True, default=None )
 
 
 
-class exam ( document ):
-
+class Exam( Document ):
     class Meta:
-        db_table = 'exam'
+        db_table = 'Exam'
 
-    matter = models.ForeignKey( classtopic )
+    matter = models.ForeignKey( ClassTopic )
 
-    def __unicode__( self ):
+
+
+    def __unicode__(self):
         return self.name + " " + self.matter
 
 
 
-class correction ( document ):
-
+class Correction( Document ):
     class Meta:
-        db_table = 'correction'
+        db_table = 'Correction'
 
-    exam = models.ForeignKey( exam )
+    exam = models.ForeignKey( Exam )
     text = models.TextField( max_length=1024 )
 
-    def __unicode__( self ):
-        return "{} correction du sujet {}".format( self.id, exam.id )
+
+
+    def __unicode__(self):
+        return "{} correction du sujet {}".format( self.id, Exam.id )
 
 
 
-class read ( models.Model ):
-
+class Read( models.Model ):
     class Meta:
-        db_table = 'read'
-    read_date = models.DateTimeField( auto_now_add=True )
-    document = models.ForeignKey( document, related_name='read_document' )
-    user = models.ForeignKey( user, related_name='read_user' )
+        db_table = 'Read'
 
-    def __unicode__( self ):
+    read_date = models.DateTimeField( auto_now_add=True )
+    document = models.ForeignKey( Document, related_name='read_document' )
+    user = models.ForeignKey( User, related_name='read_user' )
+
+
+
+    def __unicode__(self):
         return self.user.name + " - " + self.document.name + " (" + self.read_date + ")"
 
 
 
-class submit ( models.Model ):
-
+class Submit( models.Model ):
     class Meta:
-        db_table = 'submit'
-    submit_date = models.DateTimeField( auto_now_add=True )
-    document = models.ForeignKey( document, related_name='submit_document' )
-    user = models.ForeignKey( user, related_name='submit_user' )
+        db_table = 'Submit'
 
-    def __unicode__( self ):
+    submit_date = models.DateTimeField( auto_now_add=True )
+    document = models.ForeignKey( Document, related_name='submit_document' )
+    user = models.ForeignKey( User, related_name='submit_user' )
+
+
+
+    def __unicode__(self):
         return self.user.name + " - " + self.document.name + " (" + self.submit_date + ")"
 
 
 
-class comment ( models.Model ):
-
+class Comment( models.Model ):
     class Meta:
-        db_table = 'comment'
+        db_table = 'Comment'
+
     comment_date = models.DateTimeField( auto_now_add=True )
     comment = models.TextField( max_length=512 )
-    document = models.ForeignKey( document, related_name='comment_document' )
-    user = models.ForeignKey( user, related_name='comment_user' )
+    document = models.ForeignKey( Document, related_name='comment_document' )
+    user = models.ForeignKey( User, related_name='comment_user' )
 
-    def __unicode__( self ):
+
+
+    def __unicode__(self):
         return self.user.name + " - " + self.document.name + " - " + self.comment + " (" + self.comment_date + ")"
-
