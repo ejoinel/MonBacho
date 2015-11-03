@@ -83,6 +83,10 @@ class User( AbstractBaseUser, PermissionsMixin ):
 
     USERNAME_FIELD = 'email'
 
+    class Meta:
+        app_label = 'MonBacho'
+        db_table = "User"
+
     slug = models.SlugField( max_length=100 )
     school = models.OneToOneField( School, null=True, blank=True )
     sex = models.IntegerField( choices=PERSON_SEX_CHOICE, default=0 )
