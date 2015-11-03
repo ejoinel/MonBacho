@@ -2,6 +2,8 @@
 
 # import DATABASE_CONF
 from django.db import models
+from django.utils import timezone
+from django.contrib.auth.models import AbstractBaseUser, PermissionsMixin, BaseUserManager
 
 
 
@@ -55,26 +57,54 @@ class ClassTopic( models.Model ):
 
 
 
-class User( models.Model ):
+class UserManager(BaseUserManager):
 
-    class Meta:
-        db_table = 'User'
+    def create_user(self, email, password, **kwargs):
+        user = self.model(email=self.normalize_email(email), is_active=True, **kwargs)
+        user.set_password(password)
+        user.save(using=self._db)
+        return user
+
+    def create_superuser(self, email, password, **kwargs):
+        user = self.model(
+            email=email,
+            is_staff=True,
+            is_superuser=True,
+            is_active=True,
+            **kwargs
+        )
+        user.set_password(password)
+        user.save(using=self._db)
+        return user
+
+
+
+class User( AbstractBaseUser, PermissionsMixin ):
+
+    USERNAME_FIELD = 'email'
 
     slug = models.SlugField( max_length=100 )
     school = models.OneToOneField( School, null=True, blank=True )
     sex = models.IntegerField( choices=PERSON_SEX_CHOICE, default=0 )
-    firstname = models.CharField( max_length=30 )
-    lastname = models.CharField( max_length=30 )
-    nickname = models.CharField( max_length=30 )
-    mail = models.EmailField( max_length=72 )
-    password = models.CharField( max_length=100 )
     nb_points = models.IntegerField( default=0 )
     birth_date = models.DateField( default=None, blank=True, null=True )
-    creation_date = models.DateTimeField( auto_now_add=True, blank=True )
-    modification_date = models.DateTimeField( auto_now_add=True, blank=True )
+    email = models.EmailField('email address', unique=True,max_length=254, db_index=True)
+    date_joined = models.DateTimeField('date joined', default=timezone.now)
+    is_active = models.BooleanField('active', default=True)
+    is_admin = models.BooleanField(default=False)
+    receive_newsletter = models.BooleanField('receive newsletter', default=False)
+
+    objects = UserManager()
+
+    def get_full_name(self):
+        full_name = '%s %s' % (self.first_name, self.last_name)
+        return full_name.strip()
+
+    def get_short_name(self):
+        return self.first_name
 
     def __unicode__( self ):
-        return self.nickname + " (" + self.nickname + ") " + self.school.name
+        return self.email
 
 
 

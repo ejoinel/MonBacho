@@ -38,6 +38,8 @@ ALLOWED_HOSTS = []
 
 CRISPY_TEMPLATE_PACK = 'bootstrap3'
 
+AUTH_USER_MODEL = 'MonBacho.User'
+
 
 # Application definition
 
