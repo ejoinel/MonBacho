@@ -5,7 +5,7 @@ import FORM_PROPERTIES
 from django.forms.formsets import formset_factory
 from forms import LoginForm, UserForm, CreateExamForm, UploadFileForm
 from datetime import datetime
-from MonBacho.models import user
+from MonBacho.models import User
 from django.contrib import messages
 from django.template import RequestContext
 from django.http import HttpResponseRedirect
@@ -101,12 +101,12 @@ def register( request ):
             mail = form.cleaned_data['mail']
 
             # les speudo et mail sont uniques
-            if ( len( user.objects.filter( nickname=nickname ) ) > 0 ):
+            if ( len( User.objects.filter( nickname=nickname ) ) > 0 ):
                 error_form = True
                 messages.add_message( request, messages.WARNING,
                                       FORM_PROPERTIES.FORM_NICKNAME_USED )
 
-            if ( len( user.objects.filter( mail=mail ) ) > 0 ):
+            if ( len( User.objects.filter( mail=mail ) ) > 0 ):
                 error_form = True
                 messages.add_message( request, messages.WARNING,
                                       FORM_PROPERTIES.FORM_MAIL_USED )

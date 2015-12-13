@@ -7,7 +7,7 @@ from crispy_forms.layout import Submit, Layout, Field, HTML
 from crispy_forms.bootstrap import ( PrependedText,
                                     PrependedAppendedText, FormActions )
 
-from MonBacho.models import user, exam
+from MonBacho.models import User, Exam
 
 import FORM_PROPERTIES
 import ERROR_TXT
@@ -38,7 +38,7 @@ class LoginForm( forms.Form ):
 
         # Vérifie que les deux champs sont valides
         if email and password:
-            if len( user.objects.filter( password=password, mail=email ) != 1 ):
+            if len( User.objects.filter( password=password, mail=email ) != 1 ):
                 raise forms.ValidationError( ERROR_TXT.ERROR_EMAIL_PASSWORD_BAD )
         return cleaned_data
 
@@ -47,21 +47,12 @@ class LoginForm( forms.Form ):
 # Fomulaire création d'utilisateur
 class UserForm( forms.ModelForm ):
 
-    password = forms.CharField( widget=forms.PasswordInput() )
+    email = forms.EmailField( label=FORM_PROPERTIES.FORM_EMAIL,
+                              max_length=30, widget=forms.EmailInput(attrs={'placeholder': 'entrez@login.com'}))
 
-    mail = forms.EmailField( label=FORM_PROPERTIES.FORM_EMAIL,
-                              max_length=30, widget=forms.EmailInput )
-
-    def __init__( self, *args, **kwargs ):
-        super( UserForm, self ).__init__( *args, **kwargs )
-
-        self.fields['firstname'].label = FORM_PROPERTIES.FORM_NAME
-        #self.fields['sex'].label = FORM_PROPERTIES.FORM_SEXE
-        self.fields['lastname'].label = FORM_PROPERTIES.FORM_LASTNAME
-        self.fields['mail'].label = FORM_PROPERTIES.FORM_EMAIL
-        self.fields['password'].label = FORM_PROPERTIES.FORM_PASSWORD
-        self.fields['school'].label = FORM_PROPERTIES.FORM_SCHOOL
-        self.fields['nickname'].label = FORM_PROPERTIES.FORM_NICKNAME
+    password1 = forms.CharField( widget=forms.PasswordInput(attrs={'placeholder': 'mot de passe'}), label="Password" )
+    password2 = forms.CharField( widget=forms.PasswordInput(attrs={'placeholder': 'confirmer le mot de passe'}),
+                                 label="Password" )
 
     helper = FormHelper()
     helper.form_id = 'register-form'
@@ -69,23 +60,35 @@ class UserForm( forms.ModelForm ):
     helper.add_input( Submit( 'register', "S'inscrire", css_class='form-control btn btn-login' ) )
 
     class Meta:
-        model = user
-        exclude = ( 'phone_number', 'birth_date', 'sex', 'creation_date',
-                    'slug', 'modification_date' )
+        model = User
+        fields = ( 'sex', 'email', 'password1', 'password2', 'lastname', 'firstname', 'birth_date', 'school' )
+
+    def __init__(self, *args, **kwargs):
+        super(UserForm, self).__init__(*args, **kwargs)
+        self.fields['lastname'].widget = forms.TextInput(attrs={'placeholder': 'Nom'})
+        self.fields['firstname'].widget = forms.TextInput(attrs={'placeholder': 'Prénom'})
+        self.fields['birth_date'].widget = forms.DateInput(format = '%d/%m/%Y', attrs={'placeholder': 'Date de naissance jj/mm/YYYY'})
 
     def clean( self ):
 
         cleaned_data = super ( UserForm, self ).clean()
-        mail = cleaned_data.get( "mail" )
+        email = cleaned_data.get( "email" )
         nickname = cleaned_data.get( "nickname" )
 
         # Vérifie que les deux champs sont valides
-        if ( len( user.objects.filter( mail=mail ) ) > 0 ):
+        if ( len( User.objects.filter( email=email ) ) > 0 ):
             raise forms.ValidationError( FORM_PROPERTIES.FORM_MAIL_USED )
 
-        if ( len( user.objects.filter( nickname=nickname ) ) > 0 ):
+        if ( len( User.objects.filter( nickname=nickname ) ) > 0 ):
             raise forms.ValidationError( FORM_PROPERTIES.FORM_NICKNAME_USED )
         return cleaned_data
+
+    def save(self, commit=True):
+        user = super(UserForm, self).save(commit=False)
+        user.set_password(self.cleaned_data['password1'])
+        if commit:
+            user.save()
+        return user
 
 
 
@@ -98,6 +101,6 @@ class UploadFileForm( forms.Form ):
 class CreateExamForm( forms.ModelForm ):
 
     class Meta:
-        model = exam
+        model = Exam
         exclude = ( "slug", "user", "nb_views", "name", "status",
                     "creation_date", "deletion_date" )
