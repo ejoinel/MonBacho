@@ -106,7 +106,8 @@ class Migration(migrations.Migration):
                 ('id', models.AutoField(verbose_name='ID', serialize=False, auto_created=True, primary_key=True)),
                 ('password', models.CharField(max_length=128, verbose_name='password')),
                 ('last_login', models.DateTimeField(null=True, verbose_name='last login', blank=True)),
-                ('is_superuser', models.BooleanField(default=False, help_text='Designates that this user has all permissions without explicitly assigning them.', verbose_name='superuser status')),
+                ('is_superuser', models.BooleanField(default=False,
+                                                     help_text='Designates that this user has all permissions without explicitly assigning them.', verbose_name='superuser status')),
                 ('slug', models.SlugField(max_length=100)),
                 ('sex', models.IntegerField(default=0, choices=[(b'0', b'Mr'), (b'1', b'Mme'), (b'2', b'Mlle')])),
                 ('nb_points', models.IntegerField(default=0)),
@@ -116,9 +117,11 @@ class Migration(migrations.Migration):
                 ('is_active', models.BooleanField(default=True, verbose_name=b'active')),
                 ('is_admin', models.BooleanField(default=False)),
                 ('receive_newsletter', models.BooleanField(default=False, verbose_name=b'receive newsletter')),
-                ('groups', models.ManyToManyField(related_query_name='user', related_name='user_set', to='auth.Group', blank=True, help_text='The groups this user belongs to. A user will get all permissions granted to each of their groups.', verbose_name='groups')),
+                ('groups', models.ManyToManyField(related_query_name='user', related_name='user_set', to='auth.Group', blank=True,
+                                                  help_text='The groups this user belongs to. A user will get all permissions granted to each of their groups.', verbose_name='groups')),
                 ('school', models.OneToOneField(null=True, blank=True, to='MonBacho.School')),
-                ('user_permissions', models.ManyToManyField(related_query_name='user', related_name='user_set', to='auth.Permission', blank=True, help_text='Specific permissions for this user.', verbose_name='user permissions')),
+                ('user_permissions', models.ManyToManyField(related_query_name='user', related_name='user_set', to='auth.Permission',
+                                                            blank=True, help_text='Specific permissions for this user.', verbose_name='user permissions')),
             ],
             options={
                 'db_table': 'User',
@@ -127,7 +130,8 @@ class Migration(migrations.Migration):
         migrations.CreateModel(
             name='Correction',
             fields=[
-                ('document_ptr', models.OneToOneField(parent_link=True, auto_created=True, primary_key=True, serialize=False, to='MonBacho.Document')),
+                ('document_ptr', models.OneToOneField(parent_link=True, auto_created=True,
+                                                      primary_key=True, serialize=False, to='MonBacho.Document')),
                 ('text', models.TextField(max_length=1024)),
             ],
             options={
@@ -138,7 +142,8 @@ class Migration(migrations.Migration):
         migrations.CreateModel(
             name='Exam',
             fields=[
-                ('document_ptr', models.OneToOneField(parent_link=True, auto_created=True, primary_key=True, serialize=False, to='MonBacho.Document')),
+                ('document_ptr', models.OneToOneField(parent_link=True, auto_created=True,
+                                                      primary_key=True, serialize=False, to='MonBacho.Document')),
                 ('matter', models.ForeignKey(to='MonBacho.ClassTopic')),
             ],
             options={

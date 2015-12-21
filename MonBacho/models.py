@@ -6,22 +6,19 @@ from django.utils import timezone
 from django.contrib.auth.models import AbstractBaseUser, PermissionsMixin, BaseUserManager
 
 
-
 PERSON_SEX_CHOICE = (('0', 'Mr'), ('1', 'Mme'), ('2', 'Mlle'))
 
 EXAM_YEAR_CHOICES = ('2015', '2014', '2014', '2013', '2012', '2011', '2010')
 # year = forms.ChoiceField(choices=[(x, x) for x in range(1900, 2000)], required=False)
 
 
-
 class ClassLevel(models.Model):
+
     class Meta:
         db_table = 'ClassLevel'
 
     name = models.CharField(max_length=30)
     sub_category = models.CharField(max_length=30)
-
-
 
     def __unicode__(self):
         if self.sub_category:
@@ -30,31 +27,26 @@ class ClassLevel(models.Model):
             return self.name
 
 
-
 class School(models.Model):
+
     class Meta:
         db_table = 'School'
 
     name = models.CharField(max_length=100)
 
-
-
     def __unicode__(self):
         return self.name
 
 
-
 class ClassTopic(models.Model):
+
     class Meta:
         db_table = 'ClassTopic'
 
     name = models.CharField(max_length=30)
 
-
-
     def __unicode__(self):
         return self.name
-
 
 
 class UserManager(BaseUserManager):
@@ -70,7 +62,6 @@ class UserManager(BaseUserManager):
         user.set_password(password)
         user.save(using=self._db)
         return user
-
 
 
 class User(AbstractBaseUser, PermissionsMixin):
@@ -108,8 +99,8 @@ class User(AbstractBaseUser, PermissionsMixin):
         return self.email
 
 
-
 class Document(models.Model):
+
     class Meta:
         db_table = 'Document'
 
@@ -123,14 +114,12 @@ class Document(models.Model):
     creation_date = models.DateTimeField(auto_now_add=True)
     deletion_date = models.DateTimeField(auto_now_add=True)
 
-
-
     def __unicode__(self):
         return self.name + " (" + str(self.status) + ") " + self.school.name
 
 
-
 class Image(models.Model):
+
     class Meta:
         db_table = 'Image'
 
@@ -138,35 +127,31 @@ class Image(models.Model):
     document = models.ForeignKey(Document, null=True, blank=True, default=None)
 
 
-
 class Exam(Document):
+
     class Meta:
         db_table = 'Exam'
 
     matter = models.ForeignKey(ClassTopic)
 
-
-
     def __unicode__(self):
         return self.name + " " + self.matter
 
 
-
 class Correction(Document):
+
     class Meta:
         db_table = 'Correction'
 
     exam = models.ForeignKey(Exam)
     text = models.TextField(max_length=1024)
 
-
-
     def __unicode__(self):
         return "{} correction du sujet {}".format(self.id, Exam.id)
 
 
-
 class Read(models.Model):
+
     class Meta:
         db_table = 'Read'
 
@@ -174,14 +159,12 @@ class Read(models.Model):
     document = models.ForeignKey(Document, related_name='read_document')
     user = models.ForeignKey(User, related_name='read_user')
 
-
-
     def __unicode__(self):
         return self.user.name + " - " + self.document.name + " (" + str(self.read_date) + ")"
 
 
-
 class Submit(models.Model):
+
     class Meta:
         db_table = 'Submit'
 
@@ -189,14 +172,12 @@ class Submit(models.Model):
     document = models.ForeignKey(Document, related_name='submit_document')
     user = models.ForeignKey(User, related_name='submit_user')
 
-
-
     def __unicode__(self):
         return "{} {} {}".format(self.user.name, self.document.name, self.submit_date)
 
 
-
 class Comment(models.Model):
+
     class Meta:
         db_table = 'Comment'
 
@@ -204,8 +185,6 @@ class Comment(models.Model):
     comment = models.TextField(max_length=512)
     document = models.ForeignKey(Document, related_name='comment_document')
     user = models.ForeignKey(User, related_name='comment_user')
-
-
 
     def __unicode__(self):
         return "{} {} {}".format(self.user.name, self.document.name, self.comment, self.comment_date)

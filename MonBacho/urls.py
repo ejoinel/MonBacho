@@ -12,10 +12,10 @@ urlpatterns = [
     # url(r'^$', 'MonBacho.views.home', name='home'),
     # url(r'^blog/', include('blog.urls')),
 
-    url( r'^$', welcome ),
-    url( r'^welcome$', welcome ),
-    url( r'^login$', login ),
-    url( r'^register$', register ),
-    url( r'^createexam$', createexam ),
-    url( r'^admin', include( admin.site.urls ) ),
+    url(r'^$', welcome),
+    url(r'^welcome$', welcome),
+    url(r'^login$', login),
+    url(r'^register$', register),
+    url(r'^createexam$', createexam),
+    url(r'^admin', include(admin.site.urls)),
 ]

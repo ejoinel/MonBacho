@@ -11,16 +11,17 @@ import FORM_PROPERTIES
 import ERROR_TXT
 
 
-
 # Formulaire login
 class LoginForm(forms.Form):
 
     email = forms.EmailField(label=FORM_PROPERTIES.FORM_EMAIL,
-                             max_length=30, widget=forms.EmailInput(attrs={'placeholder': 'entrer@login.com'}),
+                             max_length=30,
+                             widget=forms.EmailInput(attrs={'placeholder': 'entrer@login.com'}),
                              required=True)
 
     password = forms.CharField(label=FORM_PROPERTIES.FORM_PASSWORD,
-                               required=True, widget=forms.PasswordInput(attrs={'placeholder': 'Mot de passe'}),
+                               required=True,
+                               widget=forms.PasswordInput(attrs={'placeholder': 'Mot de passe'}),
                                max_length=30)
     #remember = forms.BooleanField(label="Se souvenir de moi?")
 
@@ -42,14 +43,15 @@ class LoginForm(forms.Form):
         return cleaned_data
 
 
-
 # Fomulaire création d'utilisateur
 class UserForm(forms.ModelForm):
 
     email = forms.EmailField(label=FORM_PROPERTIES.FORM_EMAIL,
-                             max_length=30, widget=forms.EmailInput(attrs={'placeholder': 'entrez@login.com'}))
+                             max_length=30,
+                             widget=forms.EmailInput(attrs={'placeholder': 'entrez@login.com'}))
 
-    password1 = forms.CharField(widget=forms.PasswordInput(attrs={'placeholder': 'mot de passe'}), label="Password")
+    password1 = forms.CharField(widget=forms.PasswordInput(attrs={'placeholder': 'mot de passe'}),
+                                label="Password")
     password2 = forms.CharField(widget=forms.PasswordInput(attrs={'placeholder': 'confirmer le mot de passe'}),
                                 label="Password")
 
@@ -91,13 +93,11 @@ class UserForm(forms.ModelForm):
         return user
 
 
-
 class UploadFileForm(forms.Form):
     file = forms.FileField()
 
 
-
-#Formulaire création d'examen
+# Formulaire création d'examen
 class CreateExamForm(forms.ModelForm):
 
     class Meta:

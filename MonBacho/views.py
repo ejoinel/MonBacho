@@ -22,10 +22,8 @@ MESSAGE_TAGS = {message_constants.DEBUG: 'debug',
                 message_constants.ERROR: 'danger', }
 
 
-
 def welcome(request):
     return render_to_response('welcome.html', {'current_date_time': datetime.now()})
-
 
 
 def login(request):
@@ -62,16 +60,15 @@ def login(request):
                                   context_instance=RequestContext(request))
 
 
-
 def createexam(request):
 
     # Creation du formulaire + upload des images
     form = CreateExamForm(auto_id=True)
 
-    #Création du formset avec n itération : extra=2
+    # Création du formset avec n itération : extra=2
     sortedfilesform = formset_factory(UploadFileForm, extra=3)
 
-    #Récupération du formulaire géré par le mécanisme formset
+    # Récupération du formulaire géré par le mécanisme formset
     formset = sortedfilesform()
     if request.method == "POST":
         form = CreateExamForm(request.POST)
@@ -126,11 +123,10 @@ def register(request):
                                  FORM_PROPERTIES.FORM_MSG_ACCOUNT_ERROR)
 
             return render_to_response('register.html', c,
-                                      context_instance=RequestContext( request))
+                                      context_instance=RequestContext(request))
 
     else:
         form = UserForm()
         c = {'form': form}
         return render_to_response('register.html', c,
-                                  context_instance=RequestContext( request))
-
+                                  context_instance=RequestContext(request))

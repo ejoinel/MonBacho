@@ -21,4 +21,3 @@ admin.site.register(User)
 admin.site.register(Exam)
 admin.site.register(ClassLevel)
 admin.site.register(School)
-
