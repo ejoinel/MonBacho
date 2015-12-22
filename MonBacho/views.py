@@ -90,9 +90,11 @@ def register(request):
         error_form = False
 
         if form.is_valid():
-
-            nickname = form.cleaned_data['nickname']
-            mail = form.cleaned_data['mail']
+            if 'nickname' in form.cleaned_data:
+                nickname = form.cleaned_data['nickname']
+            else:
+                nickname = form.cleaned_data['email'].split("@")[0]
+            mail = form.cleaned_data['email']
 
             # les speudo et mail sont uniques
             if len(User.objects.filter(nickname=nickname)) > 0:
@@ -100,7 +102,7 @@ def register(request):
                 messages.add_message(request, messages.WARNING,
                                      FORM_PROPERTIES.FORM_NICKNAME_USED)
 
-            if len(User.objects.filter(mail=mail)) > 0:
+            if len(User.objects.filter(email=mail)) > 0:
                 error_form = True
                 messages.add_message(request, messages.WARNING,
                                      FORM_PROPERTIES.FORM_MAIL_USED)
@@ -113,13 +115,14 @@ def register(request):
             msg = msg.replace("name", nickname)
 
             stored_user = form.save(commit=False)
-            stored_user.password = make_password(form.cleaned_data['password'])
+            stored_user.password = make_password(form.cleaned_data['password1'])
+            stored_user.nickname = nickname
             stored_user.save()
             messages.add_message(request, messages.SUCCESS, msg)
 
             return HttpResponseRedirect('/login')
         else:
-            messages.add_message(request, messages.WARNING,
+            messages.add_message(request, messages.ERROR,
                                  FORM_PROPERTIES.FORM_MSG_ACCOUNT_ERROR)
 
             return render_to_response('register.html', c,
