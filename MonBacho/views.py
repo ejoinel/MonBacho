@@ -97,10 +97,9 @@ def register(request):
             mail = form.cleaned_data['email']
 
             # les speudo et mail sont uniques
-            if len(User.objects.filter(nickname=nickname)) > 0:
-                error_form = True
-                messages.add_message(request, messages.WARNING,
-                                     FORM_PROPERTIES.FORM_NICKNAME_USED)
+            nb_nickname = len(User.objects.filter(nickname=nickname))
+            if nb_nickname > 0:
+                nickname = "{}_{}".format(nickname, nb_nickname+1)
 
             if len(User.objects.filter(email=mail)) > 0:
                 error_form = True
