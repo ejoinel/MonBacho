@@ -5,6 +5,7 @@
 		<!-- Bootstrap -->
 		<link href="{% static 'css/bootstrap.min.css' %}" rel="stylesheet" media="screen">
 		<link rel="stylesheet" type="text/css" href="{% static 'css/style.css' %}" />
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css">
 		<title>MonBacho - {% block title %}Bienvenue{% endblock %}</title> 
 	</head>
 	<body  id="{% block bodyId %}genericPage{% endblock %}"> 
@@ -18,8 +19,8 @@
 				<div class="row">
 					<div class='col-sm-6 col-sm-offset-3'>
 						{% for message in messages %}
-							<div {% if message.tags %} class="alert alert-{{ message.tags }} alert-dismissible" role="alert"{% endif %}>{{ message }}>
-								<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                            <div{% if message.tags %} class="alert alert-{{ message.tags }} {% if message.tags == 'error' %}alert-danger{%endif%} alert-dismissible" role="alert"{% endif %}>{{ message }}
+                                <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
 							</div>
 						{% endfor %}
 					</div>
@@ -34,32 +35,6 @@
 	    <script src="{% static 'js/bootstrap.min.js' %}"></script>
 	    <script type="text/javascript" >
 	    	$(document).ready(function(){
-	    		$('#login-form-link').click();
-		        $("#id_name").attr('placeholder', 'Nom');
-		        $("#id_lastname").attr('placeholder', 'Prenom');
-		        $("#id_nickname").attr('placeholder', 'Pseudo');
-		        $("#id_mail").attr('placeholder', 'Email');
-		        if ($('#register-form-link').hasClass('active')){
-		        	$('#register-form-link').click();
-		        }
-		        else{
-		        	$('#login-form-link').click();
-		        }
-		        	
-		        $('#login-form-link').click(function(e) {
-		    		$("#login-form").delay(100).fadeIn(100);
-		     		$("#register-form").fadeOut(100);
-		    		$('#register-form-link').removeClass('active');
-		    		$(this).addClass('active');
-		    		e.preventDefault();
-		    	});
-		    	$('#register-form-link').click(function(e) {
-		    		$("#register-form").delay(100).fadeIn(100);
-		     		$("#login-form").fadeOut(100);
-		    		$('#login-form-link').removeClass('active');
-		    		$(this).addClass('active');
-		    		e.preventDefault();
-		    	});
 	    	});
     	</script>
 	</body>

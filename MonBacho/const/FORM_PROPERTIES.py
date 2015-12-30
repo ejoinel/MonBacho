@@ -17,10 +17,12 @@ FORM_GRADE = "Classe *"
 
 FORM_MSG_ACCOUNT_CREATED = "Bonjour name, votre compte est prêt."
 FORM_MSG_ACCOUNT_ERROR = "Un des champs renseignés est invalide."
+FORM_MSG_PASSWORD_NO_MATCHING = "Les mots de passe doivent être identiques."
 
 FORM_MAIL_USED = "Cette adresse mail est déjà utilisée."
 FORM_NICKNAME_USED = "Ce pseudo est déjà utilisé."
 FORM_UNKWON_USER = "Utilisateur Inconnu."
 FORM_LOGIN_FAILED = "L'authentification a échouée."
+FORM_LOGIN_NOT_ACTIVE = "Cet utilisateur n'est plus actif."
 
 WELCOME_MSG = "Content de vous revoir user."

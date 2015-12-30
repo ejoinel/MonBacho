@@ -55,3 +55,14 @@ MonBacho/static/.DS_Store
 .idea/workspace.xml
 
 *.xml
+.idea/encodings.xml
+
+MonBacho/templates/.DS_Store
+
+*.pyc
+
+MonBacho/templates/.DS_Store
+
+*.pyc
+
+MonBacho/__init__.pyc

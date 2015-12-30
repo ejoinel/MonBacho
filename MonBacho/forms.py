@@ -1,103 +1,114 @@
 #-*- coding: utf-8 -*-
 
 from django import forms
+from passwords.fields import PasswordField
 
 from crispy_forms.helper import FormHelper
-from crispy_forms.layout import Submit, Layout, Field, HTML
-from crispy_forms.bootstrap import ( PrependedText,
-                                    PrependedAppendedText, FormActions )
+from crispy_forms.layout import Submit, Layout, HTML
+from crispy_forms.bootstrap import (PrependedText)
 
-from MonBacho.models import user, exam
+from MonBacho.models import User, Exam
 
 import FORM_PROPERTIES
 import ERROR_TXT
 
 
-
 # Formulaire login
-class LoginForm( forms.Form ):
+class LoginForm(forms.Form):
 
-    email = forms.EmailField( label=FORM_PROPERTIES.FORM_EMAIL,
-                              max_length=30, widget=forms.EmailInput( attrs={'placeholder': 'entrer@login.com'} ),
-                              required=True )
+    email = forms.EmailField(label=FORM_PROPERTIES.FORM_EMAIL,
+                             max_length=30,
+                             widget=forms.EmailInput(attrs={'placeholder': 'entrer@login.com'}),
+                             required=True)
 
-    password = forms.CharField( label=FORM_PROPERTIES.FORM_PASSWORD,
-                                required=True, widget=forms.PasswordInput( attrs={'placeholder': 'Mot de passe'} ), max_length=30 )
-    #remember = forms.BooleanField( label="Se souvenir de moi?" )
+    password = forms.CharField(label=FORM_PROPERTIES.FORM_PASSWORD,
+                               required=True,
+                               widget=forms.PasswordInput(attrs={'placeholder': 'Mot de passe'}),
+                               max_length=30)
 
     helper = FormHelper()
     helper.form_id = 'login-form'
     helper.form_show_labels = False
-    helper.add_input( Submit( 'login', 'Connexion', css_class='btn btn-success btn-block' ) )
-    #helper.layout( PrependedText( 'field_1', '@', placeholder="username" ) )
+    helper.layout = Layout(
+        PrependedText('email', '@', placeholder="email"),
+        PrependedText('password', '**', placeholder="mot de passe"))
 
-    def clean( self ):
-        cleaned_data = super ( LoginForm, self ).clean()
-        email = cleaned_data.get( "email" )
-        password = cleaned_data.get( "password" )
+    helper.add_input(Submit('login', 'Connexion', css_class='btn btn-success btn-block'))
+
+    def clean(self):
+        cleaned_data = super(LoginForm, self).clean()
+        email = cleaned_data.get("email")
+        password = cleaned_data.get("password")
 
         # Vérifie que les deux champs sont valides
         if email and password:
-            if len( user.objects.filter( password=password, mail=email ) != 1 ):
-                raise forms.ValidationError( ERROR_TXT.ERROR_EMAIL_PASSWORD_BAD )
+            if len(User.objects.filter(password=password, mail=email)) != 1:
+                raise forms.ValidationError(ERROR_TXT.ERROR_EMAIL_PASSWORD_BAD)
         return cleaned_data
 
 
-
 # Fomulaire création d'utilisateur
-class UserForm( forms.ModelForm ):
+class UserForm(forms.ModelForm):
 
-    password = forms.CharField( widget=forms.PasswordInput() )
+    email = forms.EmailField(label=FORM_PROPERTIES.FORM_EMAIL,
+                             max_length=30,
+                             widget=forms.EmailInput(attrs={'placeholder': 'entrez@login.com'}))
 
-    mail = forms.EmailField( label=FORM_PROPERTIES.FORM_EMAIL,
-                              max_length=30, widget=forms.EmailInput )
-
-    def __init__( self, *args, **kwargs ):
-        super( UserForm, self ).__init__( *args, **kwargs )
-
-        self.fields['firstname'].label = FORM_PROPERTIES.FORM_NAME
-        #self.fields['sex'].label = FORM_PROPERTIES.FORM_SEXE
-        self.fields['lastname'].label = FORM_PROPERTIES.FORM_LASTNAME
-        self.fields['mail'].label = FORM_PROPERTIES.FORM_EMAIL
-        self.fields['password'].label = FORM_PROPERTIES.FORM_PASSWORD
-        self.fields['school'].label = FORM_PROPERTIES.FORM_SCHOOL
-        self.fields['nickname'].label = FORM_PROPERTIES.FORM_NICKNAME
+    password1 = PasswordField(widget=forms.PasswordInput(attrs={'placeholder': 'mot de passe'}),
+                              label="Password")
+    password2 = PasswordField(widget=forms.PasswordInput(attrs={'placeholder': 'confirmer le mot de passe'}),
+                              label="Password")
 
     helper = FormHelper()
     helper.form_id = 'register-form'
     helper.form_show_labels = False
-    helper.add_input( Submit( 'register', "S'inscrire", css_class='form-control btn btn-login' ) )
+    helper.add_input(Submit('register', "S'inscrire", css_class='form-control btn btn-login'))
 
     class Meta:
-        model = user
-        exclude = ( 'phone_number', 'birth_date', 'sex', 'creation_date',
-                    'slug', 'modification_date' )
+        model = User
+        fields = ('sex', 'email', 'password1', 'password2', 'last_name', 'first_name', 'birth_date', 'school')
 
-    def clean( self ):
+    def __init__(self, *args, **kwargs):
+        super(UserForm, self).__init__(*args, **kwargs)
+        self.fields['last_name'].widget = forms.TextInput(attrs={'placeholder': 'Nom'})
+        self.fields['first_name'].widget = forms.TextInput(attrs={'placeholder': 'Prénom'})
+        self.fields['birth_date'].widget = forms.DateInput(format='%d/%m/%Y',
+                                                           attrs={'placeholder': 'Date de naissance jj/mm/YYYY'})
 
-        cleaned_data = super ( UserForm, self ).clean()
-        mail = cleaned_data.get( "mail" )
-        nickname = cleaned_data.get( "nickname" )
+    def clean(self):
+
+        cleaned_data = super(UserForm, self).clean()
+        email = cleaned_data.get("email")
+        nickname = cleaned_data.get("nickname")
+
+        if 'password1' in self.cleaned_data and 'password2' in self.cleaned_data:
+            if self.cleaned_data['password1'] != self.cleaned_data['password2']:
+                raise forms.ValidationError(FORM_PROPERTIES.FORM_MSG_PASSWORD_NO_MATCHING)
 
         # Vérifie que les deux champs sont valides
-        if ( len( user.objects.filter( mail=mail ) ) > 0 ):
-            raise forms.ValidationError( FORM_PROPERTIES.FORM_MAIL_USED )
+        if len(User.objects.filter(email=email)) > 0:
+            raise forms.ValidationError(FORM_PROPERTIES.FORM_MAIL_USED)
 
-        if ( len( user.objects.filter( nickname=nickname ) ) > 0 ):
-            raise forms.ValidationError( FORM_PROPERTIES.FORM_NICKNAME_USED )
+        if len(User.objects.filter(nickname=nickname)) > 0:
+            raise forms.ValidationError(FORM_PROPERTIES.FORM_NICKNAME_USED)
         return cleaned_data
 
+    def save(self, commit=True):
+        user = super(UserForm, self).save(commit=False)
+        user.set_password(self.cleaned_data['password1'])
+        if commit:
+            user.save()
+        return user
 
 
-class UploadFileForm( forms.Form ):
+class UploadFileForm(forms.Form):
     file = forms.FileField()
 
 
-
-#Formulaire création d'examen
-class CreateExamForm( forms.ModelForm ):
+# Formulaire création d'examen
+class CreateExamForm(forms.ModelForm):
 
     class Meta:
-        model = exam
-        exclude = ( "slug", "user", "nb_views", "name", "status",
-                    "creation_date", "deletion_date" )
+        model = Exam
+        exclude = ("slug", "user", "nb_views", "name", "status",
+                   "creation_date", "deletion_date")
