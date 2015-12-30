@@ -10,6 +10,7 @@ https://docs.djangoproject.com/en/dev/ref/settings/
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 import os
+from django.conf.global_settings import TEMPLATE_CONTEXT_PROCESSORS as TCP
 
 DEFAULT_CHARSET = 'utf-8'
 DEFAULT_CONTENT_TYPE = 'text/html'
@@ -32,6 +33,8 @@ SECRET_KEY = 'va2#u=-e&z*&d2k)+4(z&_&*geyh$vr@l^z0*68i4fm%x6p+s&'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
+SESSION_EXPIRE_AT_BROWSER_CLOSE = True
+
 TEMPLATE_DEBUG = True
 
 ALLOWED_HOSTS = []
@@ -40,10 +43,35 @@ CRISPY_TEMPLATE_PACK = 'bootstrap3'
 
 AUTH_USER_MODEL = 'MonBacho.User'
 
+# Passwords
+PASSWORD_MIN_LENGTH = 6# Defaults to 6
+PASSWORD_MAX_LENGTH = 20# Defaults to None
+
+#PASSWORD_COMPLEXITY = { "UPPER": 1, "LOWER": 1, "DIGITS": 1 }
+
+# Email conf
+# EMAIL_USE_TLS = True
+# DEFAULT_FROM_EMAIL = 'ejoinel@gmail.com'
+# SERVER_EMAIL = 'ejoinel@gmail.com'
+# EMAIL_HOST = 'smtp.gmail.com'
+# EMAIL_PORT = 587
+# EMAIL_HOST_USER = 'ejoinel@gmail.com'
+# EMAIL_HOST_PASSWORD = '2NOUS_pau'
+# EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+
+TEMPLATE_CONTEXT_PROCESSORS = TCP + (
+    'django.core.context_processors.request',
+)
+
+CSRF_FAILURE_VIEW = 'Monbacho.views.csrf_failure'
 
 # Application definition
 
 INSTALLED_APPS = (
+    # third party apps
+    'crispy_forms',
+    'passwords',
+    'suit',
     # django app
     'django.contrib.admin',
     'django.contrib.auth',
@@ -51,8 +79,6 @@ INSTALLED_APPS = (
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    # third party apps
-    'crispy_forms',
     # My app
     'MonBacho',
 )

@@ -73,10 +73,11 @@ class User(AbstractBaseUser, PermissionsMixin):
         db_table = "User"
 
     slug = models.SlugField(max_length=100)
-    nickname = models.SlugField(max_length=20, default=None)
-    firstname = models.SlugField(max_length=30, default=None, null=True)
-    lastname = models.SlugField(max_length=30, default=None, null=True)
+    nickname = models.SlugField(max_length=20, null=True, blank=True)
+    first_name = models.SlugField(max_length=30, default=None, null=True)
+    last_name = models.SlugField(max_length=30, default=None, null=True)
     school = models.OneToOneField(School, null=True, blank=True)
+    school = models.ForeignKey(School, null=True, blank=True)
     sex = models.IntegerField(choices=PERSON_SEX_CHOICE, default=0)
     nb_points = models.IntegerField(default=0)
     birth_date = models.DateField(default=None, blank=True, null=True)
@@ -84,6 +85,7 @@ class User(AbstractBaseUser, PermissionsMixin):
     date_joined = models.DateTimeField('date joined', default=timezone.now)
     is_active = models.BooleanField('active', default=True)
     is_admin = models.BooleanField(default=False)
+    is_staff = models.BooleanField(default=False)
     receive_newsletter = models.BooleanField('receive newsletter', default=True)
 
     objects = UserManager()
