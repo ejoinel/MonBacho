@@ -50,28 +50,24 @@ PASSWORD_MAX_LENGTH = 20# Defaults to None
 #PASSWORD_COMPLEXITY = { "UPPER": 1, "LOWER": 1, "DIGITS": 1 }
 
 # Email conf
-# EMAIL_USE_TLS = True
-# DEFAULT_FROM_EMAIL = 'ejoinel@gmail.com'
-# SERVER_EMAIL = 'ejoinel@gmail.com'
-# EMAIL_HOST = 'smtp.gmail.com'
-# EMAIL_PORT = 587
-# EMAIL_HOST_USER = 'ejoinel@gmail.com'
-# EMAIL_HOST_PASSWORD = '2NOUS_pau'
-# EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_USE_TLS = True
+DEFAULT_FROM_EMAIL = 'ejoinel@gmail.com'
+SERVER_EMAIL = 'ejoinel@gmail.com'
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_PORT = 587
+EMAIL_HOST_USER = 'ejoinel@gmail.com'
+EMAIL_HOST_PASSWORD = '2NOUS_pau'
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 
 TEMPLATE_CONTEXT_PROCESSORS = TCP + (
     'django.core.context_processors.request',
 )
 
-CSRF_FAILURE_VIEW = 'Monbacho.views.csrf_failure'
+EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 
 # Application definition
 
 INSTALLED_APPS = (
-    # third party apps
-    'crispy_forms',
-    'passwords',
-    'suit',
     # django app
     'django.contrib.admin',
     'django.contrib.auth',
@@ -79,6 +75,11 @@ INSTALLED_APPS = (
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    # third party apps
+    'crispy_forms',
+    'passwords',
+    'suit',
+    'password_reset',
     # My app
     'MonBacho',
 )
