@@ -1,4 +1,5 @@
 {% extends "base.html" %}
+{% load i18n %}
 {% load crispy_forms_tags %}
 
 {% block title %}Register{% endblock %} 
@@ -8,7 +9,7 @@
 <div id="login-overlay" class="modal-dialog">
 	<div class="modal-content">
 	    <div class="modal-header">
-	        <h4 class="modal-title" id="myModalLabel">Créer un compte et rejoignez la communauté <b>Mbacho</b></h4>
+	        <h4 class="modal-title" id="myModalLabel">{% trans "Créer un compte et rejoignez la communauté <b>Mbacho</b>" %}</h4>
 	    </div>
 	    <div class="modal-body">
 	        <div class="row">
@@ -20,13 +21,13 @@
 	                </div>
 	            </div>
 	            <div class="col-sm-6">
-	                <p class="lead">S'inscrire à la communauté <span class="text-success">MBacho</span></p>
+	                <p class="lead">{% trans "L'inscrition vous permet:" %}</p>
 	                <ul class="list-unstyled" style="line-height: 2">
-	                    <li><span class="fa fa-check-square-o text-success"></span> Consultez tous les examens/corrigés </li>
-	                    <li><span class="fa fa-check-square-o text-success"></span> Proposez des examens/corrigés </li>
-	                    <li><span class="fa fa-check-square-o text-success"></span> Adhérez à la newsletter </li>
-	                    <li><span class="fa fa-check-square-o text-success"></span> Discutez avec d'autres membres </li>
-	                    <li><span class="fa fa-check-square-o text-success"></span> Et bien plus que ça <small>...</small></li>
+	                    <li><span class="fa fa-check-square-o text-success"></span>{% trans "Consultez tous les examens/corrigés" %}</li>
+	                    <li><span class="fa fa-check-square-o text-success"></span>{% trans "Proposez des examens/corrigés" %}</li>
+	                    <li><span class="fa fa-check-square-o text-success"></span>{% trans "Adhérez à la newsletter" %}</li>
+	                    <li><span class="fa fa-check-square-o text-success"></span>{% trans "Discutez avec d'autres membres" %}</li>
+	                    <li><span class="fa fa-check-square-o text-success"></span>{% trans "Et bien plus que ça ..." %}</li>
 	                </ul>
 	            </div>
 	        </div>

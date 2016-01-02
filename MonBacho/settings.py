@@ -23,6 +23,7 @@ STATICFILES_DIRS = (os.path.join(PROJECT_ROOT, 'static'), )
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
+LOCALE_PATHS = ('~/Projets/Perso/MonBacho/MonBacho/local',)
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/dev/howto/deployment/checklist/
@@ -58,9 +59,21 @@ if DEBUG:
     EMAIL_HOST_PASSWORD = '2NOUS_pau'
     EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 
-TEMPLATE_CONTEXT_PROCESSORS = TCP + (
-    'django.core.context_processors.request',
-)
+TEMPLATES = [
+    {
+        'BACKEND': 'django.template.backends.django.DjangoTemplates',
+        'DIRS': [],
+        'APP_DIRS': True,
+        'OPTIONS': {
+            'context_processors': [
+                'django.template.context_processors.debug',
+                'django.template.context_processors.request',
+                'django.contrib.auth.context_processors.auth',
+                'django.contrib.messages.context_processors.messages',
+            ],
+        },
+    },
+]
 
 CSRF_FAILURE_VIEW = 'Monbacho.views.csrf_failure'
 
@@ -101,6 +114,7 @@ MIDDLEWARE_CLASSES = (
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'django.middleware.security.SecurityMiddleware',
+    'django.middleware.locale.LocaleMiddleware',
 )
 
 ROOT_URLCONF = 'MonBacho.urls'
@@ -135,6 +149,9 @@ USE_L10N = True
 
 USE_TZ = True
 
+gettext = lambda x: x
+
+LANGUAGES = (('fr', gettext('French')), ('en', gettext('English')),)
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/dev/howto/static-files/

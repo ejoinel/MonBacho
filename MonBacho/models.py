@@ -3,6 +3,7 @@
 # import DATABASE_CONF
 from django.db import models
 from django.utils import timezone
+from django.utils.translation import ugettext_lazy as _
 from django.contrib.auth.models import AbstractBaseUser, PermissionsMixin, BaseUserManager
 
 
@@ -151,7 +152,7 @@ class Correction(Document):
     text = models.TextField(max_length=1024)
 
     def __unicode__(self):
-        return "{} correction du sujet {}".format(self.id, Exam.id)
+        return _(u"{} correction du sujet {}".format(self.id, Exam.id))
 
 
 class Read(models.Model):
