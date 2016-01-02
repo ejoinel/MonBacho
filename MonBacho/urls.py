@@ -17,4 +17,5 @@ urlpatterns = [
     url(r'^login$', MonBacho.views.login),
     url(r'^register$', MonBacho.views.register),
     url(r'^createexam$', MonBacho.views.createexam),
+    url(r'^account/reset_password', MonBacho.views.reset_password, name="reset_password"),
 ]

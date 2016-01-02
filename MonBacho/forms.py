@@ -47,6 +47,34 @@ class LoginForm(forms.Form):
         return cleaned_data
 
 
+
+# Formulaire login
+class AccountResetPassword(forms.Form):
+
+    email = forms.EmailField(label=FORM_PROPERTIES.FORM_EMAIL,
+                             max_length=30,
+                             widget=forms.EmailInput(attrs={'placeholder': 'entrer@login.com'}),
+                             required=True)
+
+    helper = FormHelper()
+    helper.form_id = 'reset-password-form'
+    helper.form_show_labels = False
+    helper.layout = Layout(PrependedText('email', '@', placeholder="email"))
+
+    helper.add_input(Submit('reset_password', 'Réinitialiser', css_class='btn btn-success btn-block'))
+
+    def clean(self):
+        cleaned_data = super(AccountResetPassword, self).clean()
+        email = cleaned_data.get("email")
+
+        # Vérifie que les deux champs sont valides
+        if email:
+            if len(User.objects.filter(email=email)) != 1:
+                raise forms.ValidationError(ERROR_TXT.ERROR_EMAIL_PASSWORD_BAD)
+        return cleaned_data
+
+
+
 # Fomulaire création d'utilisateur
 class UserForm(forms.ModelForm):
 

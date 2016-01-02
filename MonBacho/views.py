@@ -3,7 +3,7 @@
 import FORM_PROPERTIES
 
 from django.forms.formsets import formset_factory
-from forms import LoginForm, UserForm, CreateExamForm, UploadFileForm
+from forms import LoginForm, UserForm, CreateExamForm, UploadFileForm, AccountResetPassword
 from datetime import datetime
 from MonBacho.models import User
 from django.contrib import messages
@@ -13,8 +13,11 @@ from django.shortcuts import render_to_response
 from django.contrib.messages import constants as message_constants
 from django.contrib.auth.hashers import make_password
 from django.shortcuts import render
+from django.template import loader
+from django.core.mail import send_mail
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import authenticate, login, logout
+from settings import DEFAULT_FROM_EMAIL
 
 
 MESSAGE_TAGS = {message_constants.DEBUG: 'debug',
@@ -41,6 +44,67 @@ def logout(request):
 
 
 
+def reset_password(request):
+
+    # Test si le fomulaire a été envoyé
+    if request.method == "POST":
+        form = AccountResetPassword(request.POST)
+        context = {'form': form,}
+
+        if form.is_valid():
+            email = form.cleaned_data['email']
+            users = User.objects.filter(email=email)
+
+            if users:
+                # the password verified for the user
+                user = users[0]
+                if user.is_active:
+                    subject = FORM_PROPERTIES.PASSWORD_RESET_SUBJECT.decode('utf8')
+                    subject = subject.replace("site_name", "MonBacho")
+                    new_password = User.objects.make_random_password(length=6)
+                    print new_password
+                    user.set_password(new_password)
+                    c = {
+                        'email': user.email,
+                        'site_name': 'MBacho',
+                        'user': user,
+                        'password': new_password
+                        }
+                    email_template_name ='account/password_reset_email.html'
+                    email = loader.render_to_string(email_template_name, c)
+                    if send_mail(subject, email, DEFAULT_FROM_EMAIL, [user.email], fail_silently=False):
+                        msg = FORM_PROPERTIES.PASSWORD_RESET.decode('utf8')
+                        msg = msg.replace("user", user.email)
+                        messages.add_message(request, messages.SUCCESS, msg)
+                        user.save()
+                        return HttpResponseRedirect('/login')
+                    else:
+                        msg = FORM_PROPERTIES.PASSWORD_NOT_SENT.decode('utf8')
+                        messages.add_message(request, messages.ERROR, msg)
+                        return render_to_response(template_name='account/resetpassword.html', context=context,
+                                                  context_instance=RequestContext(request))
+                else:
+                    msg = FORM_PROPERTIES.FORM_LOGIN_NOT_ACTIVE.decode('utf8')
+                    messages.add_message(request, messages.ERROR, msg)
+                    return render_to_response(template_name='account/resetpassword.html', context=context,
+                                              context_instance=RequestContext(request))
+            else:
+                msg = FORM_PROPERTIES.FORM_USER_NOT_FOUND.decode('utf8')
+                messages.add_message(request, messages.ERROR, msg)
+                return render_to_response(template_name='account/resetpassword.html', context=context,
+                                          context_instance=RequestContext(request))
+        else:
+            context = {'form': form,}
+            return render_to_response(template_name='account/resetpassword.html', context=context,
+                                      context_instance=RequestContext(request))
+    else:
+        form = AccountResetPassword()
+        context = {'form': form,}
+        return render_to_response(template_name='account/resetpassword.html', context=context,
+                                  context_instance=RequestContext(request))
+
+
+
 def login(request):
 
     # Test si le fomulaire a été envoyé
@@ -60,8 +124,8 @@ def login(request):
                     msg = FORM_PROPERTIES.WELCOME_MSG.decode('utf8')
                     msg = msg.replace("user", user.nickname)
                     messages.add_message(request, messages.SUCCESS, msg)
-                    return HttpResponseRedirect('/login')
                     request.session['logged_user_id'] = user.id
+                    return HttpResponseRedirect('/login')
                 else:
                     messages.add_message(request, messages.WARNING,
                                          FORM_PROPERTIES.FORM_LOGIN_NOT_ACTIVE)
