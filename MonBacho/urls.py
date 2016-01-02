@@ -1,21 +1,19 @@
 #-*- coding: utf-8 -*-
 
-import MonBacho
-
 from django.conf.urls import url, include
-from views import login, home, register, createexam
 from django.contrib import admin
+from MonBacho.views import login, home, register, createexam, reset_password
 
 admin.autodiscover()
 
 urlpatterns = [
     # Examples:
-    url(r'^$', 'MonBacho.views.home', name='home'),
+    url(r'^$', home, name='home'),
     url(r'^admin/', include(admin.site.urls)),
-    url(r'^$', MonBacho.views.home),
-    url(r'^home', MonBacho.views.home),
-    url(r'^login$', MonBacho.views.login),
-    url(r'^register$', MonBacho.views.register),
-    url(r'^createexam$', MonBacho.views.createexam),
-    url(r'^account/reset_password', MonBacho.views.reset_password, name="reset_password"),
+    url(r'^$', home),
+    url(r'^home', home),
+    url(r'^login$', login),
+    url(r'^register$', register),
+    url(r'^createexam$', createexam),
+    url(r'^account/reset_password', reset_password, name="reset_password"),
 ]

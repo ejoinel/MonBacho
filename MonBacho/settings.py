@@ -44,8 +44,8 @@ CRISPY_TEMPLATE_PACK = 'bootstrap3'
 AUTH_USER_MODEL = 'MonBacho.User'
 
 # Passwords
-PASSWORD_MIN_LENGTH = 6# Defaults to 6
-PASSWORD_MAX_LENGTH = 20# Defaults to None
+PASSWORD_MIN_LENGTH = 6  # Defaults to 6
+PASSWORD_MAX_LENGTH = 20  # Defaults to None
 
 if DEBUG:
     # Email conf

@@ -54,13 +54,13 @@ class UserManager(BaseUserManager):
     def create_user(self, email, password, **kwargs):
         user = self.model(email=self.normalize_email(email), is_active=True, **kwargs)
         user.set_password(password)
-        user.save(using=self._db)
+        user.save()
         return user
 
     def create_superuser(self, email, password, **kwargs):
         user = self.model(email=email, is_staff=True, is_superuser=True, is_active=True, **kwargs)
         user.set_password(password)
-        user.save(using=self._db)
+        user.save()
         return user
 
 
@@ -76,7 +76,6 @@ class User(AbstractBaseUser, PermissionsMixin):
     nickname = models.SlugField(max_length=20, null=True, blank=True)
     first_name = models.SlugField(max_length=30, default=None, null=True)
     last_name = models.SlugField(max_length=30, default=None, null=True)
-    school = models.OneToOneField(School, null=True, blank=True)
     school = models.ForeignKey(School, null=True, blank=True)
     sex = models.IntegerField(choices=PERSON_SEX_CHOICE, default=0)
     nb_points = models.IntegerField(default=0)
@@ -128,6 +127,9 @@ class Image(models.Model):
     file_path = models.CharField(max_length=100)
     document = models.ForeignKey(Document, null=True, blank=True, default=None)
 
+    def __unicode__(self):
+        return self.file_path
+
 
 class Exam(Document):
 
@@ -162,7 +164,7 @@ class Read(models.Model):
     user = models.ForeignKey(User, related_name='read_user')
 
     def __unicode__(self):
-        return self.user.name + " - " + self.document.name + " (" + str(self.read_date) + ")"
+        return self.user.email + " - " + self.document.name + " (" + str(self.read_date) + ")"
 
 
 class Submit(models.Model):
@@ -175,7 +177,7 @@ class Submit(models.Model):
     user = models.ForeignKey(User, related_name='submit_user')
 
     def __unicode__(self):
-        return "{} {} {}".format(self.user.name, self.document.name, self.submit_date)
+        return "{} {} {}".format(self.user.email, self.document.name, self.submit_date)
 
 
 class Comment(models.Model):
@@ -189,4 +191,4 @@ class Comment(models.Model):
     user = models.ForeignKey(User, related_name='comment_user')
 
     def __unicode__(self):
-        return "{} {} {}".format(self.user.name, self.document.name, self.comment, self.comment_date)
+        return "{} {} {} {}".format(self.user.email, self.document.name, self.comment, self.comment_date)

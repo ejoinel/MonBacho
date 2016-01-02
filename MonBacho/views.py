@@ -1,11 +1,7 @@
 # -*- coding: utf-8 -*-
 
-import FORM_PROPERTIES
-
-from django.forms.formsets import formset_factory
-from forms import LoginForm, UserForm, CreateExamForm, UploadFileForm, AccountResetPassword
 from datetime import datetime
-from MonBacho.models import User
+from django.forms.formsets import formset_factory
 from django.contrib import messages
 from django.template import RequestContext
 from django.http import HttpResponseRedirect
@@ -17,8 +13,12 @@ from django.template import loader
 from django.core.mail import send_mail
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import authenticate, login, logout
-from settings import DEFAULT_FROM_EMAIL
 
+from MonBacho.settings import DEFAULT_FROM_EMAIL
+from MonBacho.forms import LoginForm, UserForm, CreateExamForm, UploadFileForm, AccountResetPassword
+from MonBacho.models import User
+
+import FORM_PROPERTIES
 
 MESSAGE_TAGS = {message_constants.DEBUG: 'debug',
                 message_constants.INFO: 'info',
@@ -49,7 +49,7 @@ def reset_password(request):
     # Test si le fomulaire a été envoyé
     if request.method == "POST":
         form = AccountResetPassword(request.POST)
-        context = {'form': form,}
+        context = {'form': form}
 
         if form.is_valid():
             email = form.cleaned_data['email']
@@ -64,14 +64,9 @@ def reset_password(request):
                     new_password = User.objects.make_random_password(length=6)
                     print new_password
                     user.set_password(new_password)
-                    c = {
-                        'email': user.email,
-                        'site_name': 'MBacho',
-                        'user': user,
-                        'password': new_password
-                        }
-                    email_template_name ='account/password_reset_email.html'
-                    email = loader.render_to_string(email_template_name, c)
+                    dict_values = {'email': user.email, 'site_name': 'MBacho', 'user': user, 'password': new_password}
+                    email_template_name = 'account/password_reset_email.html'
+                    email = loader.render_to_string(email_template_name, dict_values)
                     if send_mail(subject, email, DEFAULT_FROM_EMAIL, [user.email], fail_silently=False):
                         msg = FORM_PROPERTIES.PASSWORD_RESET.decode('utf8')
                         msg = msg.replace("user", user.email)
@@ -94,12 +89,12 @@ def reset_password(request):
                 return render_to_response(template_name='account/resetpassword.html', context=context,
                                           context_instance=RequestContext(request))
         else:
-            context = {'form': form,}
+            context = {'form': form}
             return render_to_response(template_name='account/resetpassword.html', context=context,
                                       context_instance=RequestContext(request))
     else:
         form = AccountResetPassword()
-        context = {'form': form,}
+        context = {'form': form}
         return render_to_response(template_name='account/resetpassword.html', context=context,
                                   context_instance=RequestContext(request))
 
@@ -110,7 +105,7 @@ def login(request):
     # Test si le fomulaire a été envoyé
     if request.method == "POST":
         form = LoginForm(request.POST)
-        context = {'form': form,}
+        context = {'form': form}
 
         if form.is_valid():
             password = form.cleaned_data['password']
@@ -139,7 +134,7 @@ def login(request):
                                           context_instance=RequestContext(request))
     else:
         form = LoginForm()
-        context = {'form': form,}
+        context = {'form': form}
         return render_to_response(template_name='login.html', context=context,
                                   context_instance=RequestContext(request))
 
@@ -171,7 +166,7 @@ def register(request):
 
     if request.method == "POST":
         form = UserForm(request.POST)
-        c = {'form': form}
+        form_values = {'form': form}
         error_form = False
 
         if form.is_valid():
@@ -183,14 +178,13 @@ def register(request):
 
             if form.cleaned_data['password1'] != form.cleaned_data['password2']:
                 error_form = True
-                form._errors['password1'].append('Some field is blank')
                 messages.add_message(request, messages.WARNING,
                                      FORM_PROPERTIES.FORM_MSG_PASSWORD_NO_MATCHING)
 
             # les speudo et mail sont uniques
             nb_nickname = len(User.objects.filter(nickname=nickname))
             if nb_nickname > 0:
-                nickname = "{}_{}".format(nickname, nb_nickname+1)
+                nickname = "{}_{}".format(nickname, nb_nickname + 1)
 
             if len(User.objects.filter(email=mail)) > 0:
                 error_form = True
@@ -198,7 +192,7 @@ def register(request):
                                      FORM_PROPERTIES.FORM_MAIL_USED)
 
             if error_form:
-                return render_to_response('register.html', c,
+                return render_to_response('register.html', form_values,
                                           context_instance=RequestContext(request))
 
             msg = FORM_PROPERTIES.FORM_MSG_ACCOUNT_CREATED.decode('utf8')
@@ -215,11 +209,9 @@ def register(request):
             messages.add_message(request, messages.ERROR,
                                  FORM_PROPERTIES.FORM_MSG_ACCOUNT_ERROR)
 
-            return render_to_response('register.html', c,
-                                      context_instance=RequestContext(request))
+            return render_to_response('register.html', form_values, context_instance=RequestContext(request))
 
     else:
         form = UserForm()
-        c = {'form': form}
-        return render_to_response('register.html', c,
-                                  context_instance=RequestContext(request))
+        form_values = {'form': form}
+        return render_to_response('register.html', form_values, context_instance=RequestContext(request))
