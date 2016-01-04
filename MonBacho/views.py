@@ -15,7 +15,7 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth import authenticate, login, logout
 
 from MonBacho.settings import DEFAULT_FROM_EMAIL
-from MonBacho.forms import LoginForm, UserForm, CreateExamForm, UploadFileForm, AccountResetPassword
+from MonBacho.forms import LoginForm, UserForm, CreateExamForm, UploadFileForm, AccountResetPassword, BaseFileFormSet
 from MonBacho.models import User
 
 import FORM_PROPERTIES
@@ -139,27 +139,31 @@ def login(request):
                                   context_instance=RequestContext(request))
 
 
-@login_required(login_url='/login')
+#@login_required(login_url='/login')
 def createexam(request):
 
     # Creation du formulaire + upload des images
-    form = CreateExamForm(auto_id=True)
+    doc_form = CreateExamForm(auto_id=True)
 
     # Création du formset avec n itération : extra=2
-    sortedfilesform = formset_factory(UploadFileForm, extra=3)
+    file_form_set = formset_factory(UploadFileForm, formset=BaseFileFormSet, extra=3)
 
     # Récupération du formulaire géré par le mécanisme formset
-    formset = sortedfilesform()
-    if request.method == "POST":
-        form = CreateExamForm(request.POST)
+    #formset = sortedfilesform()
 
-        if form.is_valid():
+    if request.method == "POST":
+
+        doc_form = CreateExamForm(request)
+        files_form = file_form_set(request.POST)
+
+        if doc_form.is_valid() and files_form.is_valid():
             print("Super")
         else:
             print("Mauvais")
     else:
-        context = {'form': form, 'sortedForm': formset, }
+        context = {'doc_form': doc_form, 'file_form_set': file_form_set, }
         return render(request, 'createexam.html', context)
+
 
 
 def register(request):

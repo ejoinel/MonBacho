@@ -6,19 +6,35 @@
 {% block bodyId %}CreateExam{% endblock %}
 {% block content %}
 
-<div class="container">
-    <fieldset class="fieldset">
-       <h1>Enregistrer un examen</h1>
-       <div class="row">
-       		<div class="col-xs-6">
-  				{% crispy form %}
-  				<!-- Champs utilisés par le mécanisme formset de Django -->
-				{{ sortedForm.management_form }}
-			    {% for f_form in sortedForm %}
-			        {% crispy f_form %}
-			    {% endfor %}
-			</div>
-    	</div>
-    </fieldset>
+<div id="login-overlay" class="modal-dialog">
+	<div class="modal-content">
+	    <div class="modal-header">
+            <h2>{% trans "Ajoutez un examen" %}</h2>
+	    </div>
+	    <div class="modal-body">
+	        <div class="row">
+	            <div class="col-sm-12">
+	                <div class="well">
+                        <form id="loginForm" method="POST">
+                            <fieldset class="fieldset">
+                                <legend>Main Section</legend>
+                                {% crispy doc_form %}
+                            </fieldset>
+                            <!-- Champs utilisés par le mécanisme formset de Django -->
+                            {{ file_form_set.management_form }}
+                            <fieldset class="fieldset">
+                                <legend>Pages de l'examen</legend>
+                                {% for f_form in file_form_set %}
+                                    <div class="form-inline">
+                                        {% crispy f_form %}
+                                    </div>
+                                {% endfor %}
+                            </fieldset>
+                        </form>
+	                </div>
+	            </div>
+	        </div>
+	    </div>
+	</div>
 </div>
 {% endblock %}

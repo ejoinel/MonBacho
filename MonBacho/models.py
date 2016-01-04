@@ -9,8 +9,31 @@ from django.contrib.auth.models import AbstractBaseUser, PermissionsMixin, BaseU
 
 PERSON_SEX_CHOICE = ((0, 'Mr'), (1, 'Mme'), (2, 'Mlle'))
 
-EXAM_YEAR_CHOICES = ('2015', '2014', '2014', '2013', '2012', '2011', '2010')
-# year = forms.ChoiceField(choices=[(x, x) for x in range(1900, 2000)], required=False)
+FILE_TYPE = (
+    (1, 'image'),
+    (2, 'pdf'),
+    (3, 'video'),
+)
+
+EXAM_TYPE = (
+    (1, 'real'),
+    (2, 'mock'),
+)
+
+DOCUMENT_STATUS = (
+    (1, 'new'),
+    (2, 'cleared'),
+    (3, 'deleted'),
+)
+
+EXAM_YEAR_CHOICES = (
+    (1, '2016'),
+    (2, '2015'),
+    (3, '2014'),
+    (4, '2013'),
+    (5, '2013'),
+    (6, '2012'),
+)
 
 
 class ClassLevel(models.Model):
@@ -112,7 +135,8 @@ class Document(models.Model):
     school = models.ForeignKey(School)
     nb_views = models.IntegerField(default=0)
     name = models.CharField(max_length=100)
-    status = models.IntegerField(default=-1)
+    matter = models.ForeignKey(ClassTopic, null=True)
+    status = models.IntegerField(choices=DOCUMENT_STATUS, default=1)
     creation_date = models.DateTimeField(auto_now_add=True)
     deletion_date = models.DateTimeField(auto_now_add=True)
 
@@ -120,13 +144,16 @@ class Document(models.Model):
         return self.name + " (" + str(self.status) + ") " + self.school.name
 
 
-class Image(models.Model):
+class DocumentFile(models.Model):
 
     class Meta:
-        db_table = 'Image'
+        db_table = 'DocumentFile'
 
+    description = models.CharField(max_length=50, null=True)
+    file_value = models.FileField(upload_to="photo/", null=True)
     file_path = models.CharField(max_length=100)
-    document = models.ForeignKey(Document, null=True, blank=True, default=None)
+    file_type = models.IntegerField(choices=FILE_TYPE, default=1)
+    document = models.ForeignKey(Document)
 
     def __unicode__(self):
         return self.file_path
@@ -136,8 +163,8 @@ class Exam(Document):
 
     class Meta:
         db_table = 'Exam'
-
-    matter = models.ForeignKey(ClassTopic)
+    year_exam = models.IntegerField(choices=EXAM_YEAR_CHOICES, default=1)
+    mock_exam = models.IntegerField(choices=EXAM_TYPE, default=1)
 
     def __unicode__(self):
         return self.name + " " + self.matter

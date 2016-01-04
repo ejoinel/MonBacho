@@ -1,13 +1,15 @@
 #-*- coding: utf-8 -*-
 
 from django import forms
+from django.forms import ModelForm
+from django.forms.formsets import BaseFormSet
 from passwords.fields import PasswordField
 
 from crispy_forms.helper import FormHelper
 from crispy_forms.layout import Submit, Layout, HTML
-from crispy_forms.bootstrap import (PrependedText)
+from crispy_forms.bootstrap import PrependedText, Field
 
-from MonBacho.models import User, Exam
+from MonBacho.models import User, Exam, DocumentFile
 
 import FORM_PROPERTIES
 import ERROR_TXT
@@ -129,12 +131,64 @@ class UserForm(forms.ModelForm):
         return user
 
 
-class UploadFileForm(forms.Form):
-    file = forms.FileField()
+class UploadFileForm(ModelForm):
+
+    description = forms.CharField(max_length=30)
+
+    file_value = forms.FileInput()
+
+    helper = FormHelper()
+    helper.form_id = 'file-input'
+    helper.form_show_labels = False
+    helper.layout = Layout(
+        PrependedText('description', "#", placeholder="Page N°"),
+        PrependedText('file_value', "", placeholder=""))
+    #helper.layout.insert(1, HTML("<input type='file' class='file' multiple data-show-upload='false' data-show-caption='true'>"))
+
+    class Meta:
+        model = DocumentFile
+        exclude = ("file_type", "file_path", "document")
+
+
+
+# formset des fichiers
+class BaseFileFormSet(BaseFormSet):
+
+    def clean(self):
+
+        if any(self.errors):
+            return
+
+        descriptions = []
+        duplicates = False
+
+        for form in self.forms:
+            description = form.cleaned_data['description']
+
+            if description:
+                if description in descriptions:
+                    duplicates = True
+                descriptions.append(description)
+
+            if duplicates:
+                raise forms.ValidationError('Les descriptions des fichiers doivent être unique.', code='duplicate_links')
+
 
 
 # Formulaire création d'examen
 class CreateExamForm(forms.ModelForm):
+
+    def __init__(self, *args, **kwargs):
+        helper = FormHelper()
+        helper.form_show_labels = False
+        helper.layout = Layout(
+            Field("level", placeholder="Classe"),
+            Field("school"),
+            Field("year_exam"),
+            Field("mock_exam"),
+            Field("school"),
+            Field("matter"))
+        super(CreateExamForm, self).__init__(*args, **kwargs)
 
     class Meta:
         model = Exam
