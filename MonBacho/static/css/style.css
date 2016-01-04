@@ -104,6 +104,14 @@ body {
 	border-color: #1CA347;
 }
 
+.panel-heading span {
+    margin-top: -20px;
+    font-size: 15px;
+}
+
+.clickable {
+    cursor: pointer;
+}
 
 /* Bootstrap custom*/
 .navbar-default {

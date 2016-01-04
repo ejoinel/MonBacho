@@ -14,24 +14,32 @@
 	    <div class="modal-body">
 	        <div class="row">
 	            <div class="col-sm-12">
-	                <div class="well">
-                        <form id="loginForm" method="POST">
-                            <fieldset class="fieldset">
-                                <legend>Main Section</legend>
+                    <form id="loginForm" method="POST">
+                        <div class="panel panel-success">
+                            <div class="panel-heading">
+                                <h3 class="panel-title">Panel 1</h3>
+                                <span class="pull-right"><i class="glyphicon glyphicon-chevron-up"></i></span>
+                            </div>
+                            <div class="panel-body">
                                 {% crispy doc_form %}
-                            </fieldset>
-                            <!-- Champs utilisés par le mécanisme formset de Django -->
-                            {{ file_form_set.management_form }}
-                            <fieldset class="fieldset">
-                                <legend>Pages de l'examen</legend>
+                            </div>
+                        </div>
+                        <!-- Champs utilisés par le mécanisme formset de Django -->
+                        <div class="panel panel-warning">
+                            <div class="panel-heading">
+                                <h3 class="panel-title">Panel 1</h3>
+                                <span class="pull-right clickable"><i class="glyphicon glyphicon-chevron-up"></i></span>
+                            </div>
+                            <div class="panel-body">
+                                {{ file_form_set.management_form }}
                                 {% for f_form in file_form_set %}
                                     <div class="form-inline">
                                         {% crispy f_form %}
                                     </div>
                                 {% endfor %}
-                            </fieldset>
-                        </form>
-	                </div>
+                            </div>
+                        </div>
+                    </form>
 	            </div>
 	        </div>
 	    </div>

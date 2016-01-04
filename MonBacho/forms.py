@@ -32,8 +32,8 @@ class LoginForm(forms.Form):
     helper.form_id = 'login-form'
     helper.form_show_labels = False
     helper.layout = Layout(
-        PrependedText('email', '@', placeholder="email"),
-        PrependedText('password', '**', placeholder="mot de passe"))
+        PrependedText('email', '@', placeholder="Email"),
+        PrependedText('password', '**', placeholder="Mot de passe"))
 
     helper.add_input(Submit('login', 'Connexion', css_class='btn btn-success btn-block'))
 
@@ -141,7 +141,7 @@ class UploadFileForm(ModelForm):
     helper.form_id = 'file-input'
     helper.form_show_labels = False
     helper.layout = Layout(
-        PrependedText('description', "#", placeholder="Page N°"),
+        PrependedText('description', "#", placeholder="Ex: N° page"),
         PrependedText('file_value', "", placeholder=""))
     #helper.layout.insert(1, HTML("<input type='file' class='file' multiple data-show-upload='false' data-show-caption='true'>"))
 
