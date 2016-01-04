@@ -32,8 +32,8 @@ class LoginForm(forms.Form):
     helper.form_id = 'login-form'
     helper.form_show_labels = False
     helper.layout = Layout(
-        PrependedText('email', '@', placeholder="Email"),
-        PrependedText('password', '**', placeholder="Mot de passe"))
+        PrependedText('email', '<span class="fa fa-user fa-lg"></span>', placeholder="Email"),
+        PrependedText('password', '<span class="fa fa-lock fa-lg"></span>', placeholder="Mot de passe"))
 
     helper.add_input(Submit('login', 'Connexion', css_class='btn btn-success btn-block'))
 
@@ -86,12 +86,22 @@ class UserForm(forms.ModelForm):
 
     password1 = PasswordField(widget=forms.PasswordInput(attrs={'placeholder': 'mot de passe'}),
                               label="Password")
-    password2 = PasswordField(widget=forms.PasswordInput(attrs={'placeholder': 'confirmer le mot de passe'}),
+    password2 = PasswordField(widget=forms.PasswordInput(),
+                              help_text="Confimer le mot de passe",
                               label="Password")
+
+    birth_date = forms.DateField(help_text="Cette information restera privée")
 
     helper = FormHelper()
     helper.form_id = 'register-form'
     helper.form_show_labels = False
+    helper.layout = Layout(PrependedText('sex', '', ''),
+                           PrependedText('email', '<span class="fa fa-user fa-lg"></span>', placeholder="Email"),
+                           PrependedText('password1', '<span class="fa fa-lock fa-lg fa-lg"></span>', placeholder="Mot de passe"),
+                           PrependedText('password2', '<span class="fa fa-lock fa-lg fa-lg"></span>', placeholder="Confirmer"),
+                           PrependedText('last_name', '<span class="fa fa-tag fa-lg"></span>', placeholder="Nom(s)"),
+                           PrependedText('first_name', '<span class="fa fa-tag fa-lg"></span>', placeholder="Prenom(s)"),
+                           PrependedText('birth_date', '<span class="fa fa-calendar fa-lg"></span>', placeholder="dd/MM/YYYY"))
     helper.add_input(Submit('register', "S'inscrire", css_class='form-control btn btn-login'))
 
     class Meta:
@@ -141,7 +151,7 @@ class UploadFileForm(ModelForm):
     helper.form_id = 'file-input'
     helper.form_show_labels = False
     helper.layout = Layout(
-        PrependedText('description', "#", placeholder="Ex: N° page"),
+        PrependedText('description', '<span class="fa fa-commenting fa-lg"></span>', placeholder="Ex: N° page"),
         PrependedText('file_value', "", placeholder=""))
     #helper.layout.insert(1, HTML("<input type='file' class='file' multiple data-show-upload='false' data-show-caption='true'>"))
 
