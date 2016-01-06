@@ -1,4 +1,6 @@
 {% extends "base.html" %}
+{% load staticfiles %}
 {% load i18n %}
 {% block title %}Bienvenue{% endblock %}
-{% block content %}Bienvenue sur mon bacho! Nous sommes le {{current_date_time}}. {% endblock %}
+{% block bodyId %}homepage{% endblock %}
+{% block body_block %}Bienvenue sur mon bacho! Nous sommes le {{current_date_time}}. {% endblock %}

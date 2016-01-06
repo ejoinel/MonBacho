@@ -27,14 +27,15 @@ MESSAGE_TAGS = {message_constants.DEBUG: 'debug',
                 message_constants.ERROR: 'danger', }
 
 
-@login_required(login_url='/login')
+#@login_required(login_url='/login')
 def home(request):
-    if 'logged_user_id' in request.session:
-        logged_user_id = request.session['logged_user_id']
-        logged_user = authenticate(id=logged_user_id)
-        return render_to_response('home.html', {'current_date_time': datetime.now(), 'logged_user': logged_user})
-    else:
-        return HttpResponseRedirect('/login')
+    return render_to_response('home.html', {'current_date_time': datetime.now()})
+    # if 'logged_user_id' in request.session:
+    #     logged_user_id = request.session['logged_user_id']
+    #     logged_user = authenticate(id=logged_user_id)
+    #     return render_to_response('home.html', {'current_date_time': datetime.now(), 'logged_user': logged_user})
+    # else:
+    #     return HttpResponseRedirect('/login')
 
 
 

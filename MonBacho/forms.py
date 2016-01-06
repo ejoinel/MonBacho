@@ -1,7 +1,7 @@
 #-*- coding: utf-8 -*-
 
 from django import forms
-from django.forms import ModelForm
+from django.forms import ModelForm, extras
 from django.forms.formsets import BaseFormSet
 from passwords.fields import PasswordField
 
@@ -14,6 +14,7 @@ from MonBacho.models import User, Exam, DocumentFile
 import FORM_PROPERTIES
 import ERROR_TXT
 
+EXAM_YEAR_CHOICES = ('2016', '2015', '2014', '2013', '2012', '2011', '2010', '2009')
 
 # Formulaire login
 class LoginForm(forms.Form):
@@ -101,7 +102,8 @@ class UserForm(forms.ModelForm):
                            PrependedText('password2', '<span class="fa fa-lock fa-lg fa-lg"></span>', placeholder="Confirmer"),
                            PrependedText('last_name', '<span class="fa fa-tag fa-lg"></span>', placeholder="Nom(s)"),
                            PrependedText('first_name', '<span class="fa fa-tag fa-lg"></span>', placeholder="Prenom(s)"),
-                           PrependedText('birth_date', '<span class="fa fa-calendar fa-lg"></span>', placeholder="dd/MM/YYYY"))
+                           PrependedText('birth_date', '<span class="fa fa-calendar fa-lg"></span>', placeholder="dd/MM/YYYY"),
+                           PrependedText('school', '', css_class='selectpicker'),)
     helper.add_input(Submit('register', "S'inscrire", css_class='form-control btn btn-login'))
 
     class Meta:
@@ -188,19 +190,16 @@ class BaseFileFormSet(BaseFormSet):
 # Formulaire création d'examen
 class CreateExamForm(forms.ModelForm):
 
-    def __init__(self, *args, **kwargs):
-        helper = FormHelper()
-        helper.form_show_labels = False
-        helper.layout = Layout(
-            Field("level", placeholder="Classe"),
-            Field("school"),
-            Field("year_exam"),
-            Field("mock_exam"),
-            Field("school"),
-            Field("matter"))
-        super(CreateExamForm, self).__init__(*args, **kwargs)
+    helper = FormHelper()
+    helper.form_id = 'CreateExam'
+    helper.form_show_labels = False
+    helper.layout = Layout(
+        PrependedText("matter", "", ""),
+        PrependedText("level", "<small class='text-warning'>Selectionner la classe. </small>", ""),
+        PrependedText("school", "<pre><small>Selectionner l\'établissement. </small></pre>", css_class="selectpicker"),
+        PrependedText("year_exam", ""),
+        PrependedText("mock_exam", ""))
 
     class Meta:
         model = Exam
-        exclude = ("slug", "user", "nb_views", "name", "status",
-                   "creation_date", "deletion_date")
+        exclude = ("slug", "user", "nb_views", "name", "status", "creation_date", "deletion_date")
