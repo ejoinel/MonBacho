@@ -45,7 +45,7 @@ class LoginForm(forms.Form):
 
         # Vérifie que les deux champs sont valides
         if email and password:
-            if len(User.objects.filter(password=password, mail=email)) != 1:
+            if len(User.objects.filter(email=email)) != 1:
                 raise forms.ValidationError(ERROR_TXT.ERROR_EMAIL_PASSWORD_BAD)
         return cleaned_data
 
@@ -159,7 +159,7 @@ class UploadFileForm(ModelForm):
 
     class Meta:
         model = DocumentFile
-        exclude = ("file_type", "file_path", "document")
+        fields = ['description', 'file_value']
 
 
 

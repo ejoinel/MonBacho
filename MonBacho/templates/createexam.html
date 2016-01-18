@@ -14,31 +14,27 @@
             </div>
             <div class="panel-body" >
                 <div class="col-sm-12">
-                    <form id="loginForm" method="POST">
-                        <div class="panel panel-success">
-                            <div class="panel-heading">
-                                <h3 class="panel-title">Classe - Matière - Date</h3>
-                                <span class="pull-right"><i class="glyphicon glyphicon-chevron-up"></i></span>
+                    <form id="CreateExamForm" method="POST" enctypr="multipart/form-data">
+                        {% csrf_token %}
+                        <table>
+                            <div class="panel panel-success">
+                                <div class="panel-heading">
+                                    <h3 class="panel-title">Classe - Matière - Date</h3>
+                                    <span class="pull-right"><i class="glyphicon glyphicon-chevron-up"></i></span>
+                                </div>
+                                <div class="panel-body">
+                                    {% crispy doc_form %}
+
+                                    {{ file_form_set.management_form }}
+                                    {% for f_form in file_form_set %}
+                                        <div class="form-inline">
+                                            {% crispy f_form %}
+                                        </div>
+                                    {% endfor %}
+                                </div>
                             </div>
-                            <div class="panel-body">
-                                {% crispy doc_form %}
-                            </div>
-                        </div>
-                        <!-- Champs utilisés par le mécanisme formset de Django -->
-                        <div class="panel panel-warning">
-                            <div class="panel-heading">
-                                <h3 class="panel-title">Fichiers</h3>
-                                <span class="pull-right"><i class="glyphicon glyphicon-chevron-up"></i></span>
-                            </div>
-                            <div class="panel-body">
-                                {{ file_form_set.management_form }}
-                                {% for f_form in file_form_set %}
-                                    <div class="form-inline">
-                                        {% crispy f_form %}
-                                    </div>
-                                {% endfor %}
-                            </div>
-                        </div>
+                        </table>
+                        <input type="submit" value="Add recipe" class="submit" />
                     </form>
 	            </div>
             </div>

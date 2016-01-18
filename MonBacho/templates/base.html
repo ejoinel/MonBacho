@@ -29,7 +29,12 @@
 
                 </div>
                 <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
-                   <div>
+                   {% for message in messages %}
+                            <div{% if message.tags %} class="alert alert-{{ message.tags }} {% if message.tags == 'error' %}alert-danger{%endif%} alert-dismissible" role="alert"{% endif %}>{{ message }}
+                                <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+							</div>
+                    {% endfor %}
+                    <div>
                         {% block body_block %}{% endblock %}
                     </div>
                 </div>
@@ -44,7 +49,6 @@
 	    <script type="text/javascript" >
 	    	$(document).ready(function(){
                 $('select.selectpicker').attr('data-live-search', 'true');
-                $('select.selectpicker').attr('title', 'Choose 2-4 colors');
 	    	});
     	</script>
         <script src="{% static 'js/jquery.formset.js' %}"></script>

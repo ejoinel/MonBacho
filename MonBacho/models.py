@@ -138,7 +138,7 @@ class Document(models.Model):
     matter = models.ForeignKey(ClassTopic, null=False, default=1)
     status = models.IntegerField(choices=DOCUMENT_STATUS, default=1)
     creation_date = models.DateTimeField(auto_now_add=True)
-    deletion_date = models.DateTimeField(auto_now_add=True)
+    deletion_date = models.DateTimeField(null=True, default=None)
 
     def __unicode__(self):
         return self.name + " (" + str(self.status) + ") " + self.school.name
@@ -150,8 +150,7 @@ class DocumentFile(models.Model):
         db_table = 'DocumentFile'
 
     description = models.CharField(max_length=50, null=True)
-    file_value = models.FileField(upload_to="photo/", null=True)
-    file_path = models.CharField(max_length=100)
+    file_value = models.FileField(upload_to="photo/")
     file_type = models.IntegerField(choices=FILE_TYPE, default=1)
     document = models.ForeignKey(Document)
 

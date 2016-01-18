@@ -2,6 +2,7 @@
 
 from datetime import datetime
 from django.forms.formsets import formset_factory
+from django.forms import modelformset_factory
 from django.contrib import messages
 from django.template import RequestContext
 from django.http import HttpResponseRedirect
@@ -12,11 +13,13 @@ from django.shortcuts import render
 from django.template import loader
 from django.core.mail import send_mail
 from django.contrib.auth.decorators import login_required
-from django.contrib.auth import authenticate, login, logout
+from django.contrib.auth import authenticate
+from django.contrib.auth import login as super_login
+from django.contrib.auth import logout as super_logout
 
 from MonBacho.settings import DEFAULT_FROM_EMAIL
 from MonBacho.forms import LoginForm, UserForm, CreateExamForm, UploadFileForm, AccountResetPassword, BaseFileFormSet
-from MonBacho.models import User
+from MonBacho.models import User, DocumentFile, Exam
 
 import FORM_PROPERTIES
 
@@ -40,7 +43,7 @@ def home(request):
 
 
 def logout(request):
-    logout(request)
+    super_logout(request)
     return HttpResponseRedirect('/login')
 
 
@@ -116,12 +119,12 @@ def login(request):
             if user:
                 # the password verified for the user
                 if user.is_active:
-                    login(request, user)
+                    super_login(request, user)
                     msg = FORM_PROPERTIES.WELCOME_MSG.decode('utf8')
                     msg = msg.replace("user", user.nickname)
                     messages.add_message(request, messages.SUCCESS, msg)
                     request.session['logged_user_id'] = user.id
-                    return HttpResponseRedirect('/login')
+                    return HttpResponseRedirect('/home')
                 else:
                     messages.add_message(request, messages.WARNING,
                                          FORM_PROPERTIES.FORM_LOGIN_NOT_ACTIVE)
@@ -133,6 +136,11 @@ def login(request):
                 messages.add_message(request, messages.WARNING, msg)
                 return render_to_response(template_name='login.html', context=context,
                                           context_instance=RequestContext(request))
+        else:
+            msg = FORM_PROPERTIES.FORM_LOGIN_FAILED
+            messages.add_message(request, messages.WARNING, msg)
+            return render_to_response(template_name='login.html', context=context,
+                                      context_instance=RequestContext(request))
     else:
         form = LoginForm()
         context = {'form': form}
@@ -140,27 +148,38 @@ def login(request):
                                   context_instance=RequestContext(request))
 
 
-#@login_required(login_url='/login')
+@login_required(login_url='/login')
 def createexam(request):
 
     # Creation du formulaire + upload des images
     doc_form = CreateExamForm(auto_id=True)
 
     # Création du formset avec n itération : extra=2
-    file_form_set = formset_factory(UploadFileForm, formset=BaseFileFormSet, extra=3)
+    file_form_set = modelformset_factory(DocumentFile, form=UploadFileForm, extra=3)
 
     # Récupération du formulaire géré par le mécanisme formset
     #formset = sortedfilesform()
 
     if request.method == "POST":
 
-        doc_form = CreateExamForm(request)
-        files_form = file_form_set(request.POST)
+        doc_form = CreateExamForm(request.POST)
+        post_files_formset = file_form_set(request.POST, request.FILES, queryset=DocumentFile.objects.none())
 
-        if doc_form.is_valid() and files_form.is_valid():
-            print("Super")
-        else:
-            print("Mauvais")
+        if doc_form.is_valid() and post_files_formset.is_valid():
+            new_doc = Exam(level=doc_form.cleaned_data['level'], matter=doc_form.cleaned_data['matter'],
+                           school=doc_form.cleaned_data['school'], year_exam=doc_form.cleaned_data['year_exam'],
+                           mock_exam=doc_form.cleaned_data['mock_exam'])
+            new_doc.user = request.user
+            new_doc.user_id = request.user.id
+            new_doc.save()
+            #list_files = files_form.save(commit=False)
+            for form in post_files_formset.cleaned_data:
+                image = form['file_value']
+                description = form['description']
+                doc_file = DocumentFile(document=new_doc, file_value=image, description=description)
+                doc_file.save()
+
+        return HttpResponseRedirect('/login')
     else:
         context = {'doc_form': doc_form, 'file_form_set': file_form_set, }
         return render(request, 'createexam.html', context)
