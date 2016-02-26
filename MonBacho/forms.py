@@ -8,6 +8,7 @@ from passwords.fields import PasswordField
 from crispy_forms.helper import FormHelper
 from crispy_forms.layout import Submit, Layout, HTML
 from crispy_forms.bootstrap import PrependedText, Field
+from multiupload.fields import MultiFileField
 
 from MonBacho.models import User, Exam, DocumentFile
 
@@ -147,19 +148,19 @@ class UploadFileForm(ModelForm):
 
     description = forms.CharField(max_length=30)
 
-    file_value = forms.FileInput()
+    image = forms.ImageField(label='Image')
 
     helper = FormHelper()
     helper.form_id = 'file-input'
     helper.form_show_labels = False
     helper.layout = Layout(
         PrependedText('description', '<span class="fa fa-commenting fa-lg"></span>', placeholder="Ex: N° page"),
-        PrependedText('file_value', "", placeholder=""))
+        PrependedText('image', "", placeholder=""))
     #helper.layout.insert(1, HTML("<input type='file' class='file' multiple data-show-upload='false' data-show-caption='true'>"))
 
     class Meta:
         model = DocumentFile
-        fields = ['description', 'file_value']
+        fields = ['description', 'image']
 
 
 
@@ -190,6 +191,7 @@ class BaseFileFormSet(BaseFormSet):
 # Formulaire création d'examen
 class CreateExamForm(forms.ModelForm):
 
+    files = MultiFileField(min_num=1, max_num=3, max_file_size=1024*1024*5)
     helper = FormHelper()
     helper.form_id = 'CreateExam'
     helper.form_show_labels = False
@@ -198,7 +200,8 @@ class CreateExamForm(forms.ModelForm):
         PrependedText("level", "<small class='text-warning'>Selectionner la classe. </small>", ""),
         PrependedText("school", "<pre><small>Selectionner l\'établissement. </small></pre>", css_class="selectpicker"),
         PrependedText("year_exam", ""),
-        PrependedText("mock_exam", ""))
+        PrependedText("mock_exam", ""),
+        PrependedText("files", ""))
 
     class Meta:
         model = Exam

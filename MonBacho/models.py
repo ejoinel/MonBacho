@@ -150,9 +150,8 @@ class DocumentFile(models.Model):
         db_table = 'DocumentFile'
 
     description = models.CharField(max_length=50, null=True)
-    file_value = models.FileField(upload_to="photo/")
-    file_type = models.IntegerField(choices=FILE_TYPE, default=1)
-    document = models.ForeignKey(Document)
+    image = models.ImageField( upload_to="photo/", verbose_name='image', )
+    document = models.ForeignKey(Document, default=None)
 
     def __unicode__(self):
         return self.file_path

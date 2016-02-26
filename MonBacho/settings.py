@@ -84,6 +84,7 @@ INSTALLED_APPS = (
     'crispy_forms',
     'passwords',
     'suit',
+    'multiupload',
     # django app
     'django.contrib.admin',
     'django.contrib.auth',

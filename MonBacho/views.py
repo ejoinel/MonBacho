@@ -162,8 +162,8 @@ def createexam(request):
 
     if request.method == "POST":
 
-        doc_form = CreateExamForm(request.POST)
-        post_files_formset = file_form_set(request.POST, request.FILES, queryset=DocumentFile.objects.none())
+        doc_form = CreateExamForm(request.POST, request.FILES)
+        post_files_formset = file_form_set(request.POST, request.FILES)
 
         if doc_form.is_valid() and post_files_formset.is_valid():
             new_doc = Exam(level=doc_form.cleaned_data['level'], matter=doc_form.cleaned_data['matter'],
@@ -173,13 +173,16 @@ def createexam(request):
             new_doc.user_id = request.user.id
             new_doc.save()
             #list_files = files_form.save(commit=False)
-            for form in post_files_formset.cleaned_data:
-                image = form['file_value']
-                description = form['description']
-                doc_file = DocumentFile(document=new_doc, file_value=image, description=description)
-                doc_file.save()
+            images = post_files_formset.save(commit=False)
+            for image in images:
+                image.document = new_doc
+                image.save()
+            return HttpResponseRedirect('/login')
+        else:
+            context = {'doc_form': doc_form, 'file_form_set': file_form_set, }
+            return render(request, 'createexam.html', context)
 
-        return HttpResponseRedirect('/login')
+
     else:
         context = {'doc_form': doc_form, 'file_form_set': file_form_set, }
         return render(request, 'createexam.html', context)

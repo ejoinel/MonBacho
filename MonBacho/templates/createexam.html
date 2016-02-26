@@ -14,7 +14,7 @@
             </div>
             <div class="panel-body" >
                 <div class="col-sm-12">
-                    <form id="CreateExamForm" method="POST" enctypr="multipart/form-data">
+                    <form id="CreateExamForm" method="POST" action="" enctype="multipart/form-data">
                         {% csrf_token %}
                         <table>
                             <div class="panel panel-success">
@@ -27,9 +27,7 @@
 
                                     {{ file_form_set.management_form }}
                                     {% for f_form in file_form_set %}
-                                        <div class="form-inline">
                                             {% crispy f_form %}
-                                        </div>
                                     {% endfor %}
                                 </div>
                             </div>
