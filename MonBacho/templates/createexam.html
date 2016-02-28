@@ -24,11 +24,6 @@
                                 </div>
                                 <div class="panel-body">
                                     {% crispy doc_form %}
-
-                                    {{ file_form_set.management_form }}
-                                    {% for f_form in file_form_set %}
-                                            {% crispy f_form %}
-                                    {% endfor %}
                                 </div>
                             </div>
                         </table>

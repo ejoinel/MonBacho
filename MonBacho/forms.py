@@ -191,7 +191,8 @@ class BaseFileFormSet(BaseFormSet):
 # Formulaire création d'examen
 class CreateExamForm(forms.ModelForm):
 
-    files = MultiFileField(min_num=1, max_num=3, max_file_size=1024*1024*5)
+    first_files = MultiFileField( min_num=1, max_num=3, max_file_size=1024 * 1024 * 5 )
+    second_files = MultiFileField( min_num=0, max_num=4, max_file_size=1024 * 1024 * 5 )
     helper = FormHelper()
     helper.form_id = 'CreateExam'
     helper.form_show_labels = False
@@ -201,7 +202,8 @@ class CreateExamForm(forms.ModelForm):
         PrependedText("school", "<pre><small>Selectionner l\'établissement. </small></pre>", css_class="selectpicker"),
         PrependedText("year_exam", ""),
         PrependedText("mock_exam", ""),
-        PrependedText("files", ""))
+        PrependedText("first_files", ""),
+        PrependedText("second_files", ""))
 
     class Meta:
         model = Exam

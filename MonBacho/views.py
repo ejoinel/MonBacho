@@ -1,27 +1,24 @@
 # -*- coding: utf-8 -*-
 
 from datetime import datetime
-from django.forms.formsets import formset_factory
-from django.forms import modelformset_factory
 from django.contrib import messages
-from django.template import RequestContext
-from django.http import HttpResponseRedirect
-from django.shortcuts import render_to_response
-from django.contrib.messages import constants as message_constants
-from django.contrib.auth.hashers import make_password
-from django.shortcuts import render
-from django.template import loader
-from django.core.mail import send_mail
-from django.contrib.auth.decorators import login_required
 from django.contrib.auth import authenticate
 from django.contrib.auth import login as super_login
 from django.contrib.auth import logout as super_logout
-
-from MonBacho.settings import DEFAULT_FROM_EMAIL
-from MonBacho.forms import LoginForm, UserForm, CreateExamForm, UploadFileForm, AccountResetPassword, BaseFileFormSet
-from MonBacho.models import User, DocumentFile, Exam
+from django.contrib.auth.decorators import login_required
+from django.contrib.auth.hashers import make_password
+from django.contrib.messages import constants as message_constants
+from django.core.mail import send_mail
+from django.http import HttpResponseRedirect
+from django.shortcuts import render
+from django.shortcuts import render_to_response
+from django.template import RequestContext
+from django.template import loader
 
 import FORM_PROPERTIES
+from MonBacho.forms import LoginForm, UserForm, CreateExamForm, AccountResetPassword
+from MonBacho.models import User, DocumentFile, Exam
+from MonBacho.settings import DEFAULT_FROM_EMAIL
 
 MESSAGE_TAGS = {message_constants.DEBUG: 'debug',
                 message_constants.INFO: 'info',
@@ -154,8 +151,6 @@ def createexam(request):
     # Creation du formulaire + upload des images
     doc_form = CreateExamForm(auto_id=True)
 
-    # Création du formset avec n itération : extra=2
-    file_form_set = modelformset_factory(DocumentFile, form=UploadFileForm, extra=3)
 
     # Récupération du formulaire géré par le mécanisme formset
     #formset = sortedfilesform()
@@ -163,28 +158,27 @@ def createexam(request):
     if request.method == "POST":
 
         doc_form = CreateExamForm(request.POST, request.FILES)
-        post_files_formset = file_form_set(request.POST, request.FILES)
 
-        if doc_form.is_valid() and post_files_formset.is_valid():
+        if doc_form.is_valid():
             new_doc = Exam(level=doc_form.cleaned_data['level'], matter=doc_form.cleaned_data['matter'],
                            school=doc_form.cleaned_data['school'], year_exam=doc_form.cleaned_data['year_exam'],
                            mock_exam=doc_form.cleaned_data['mock_exam'])
             new_doc.user = request.user
             new_doc.user_id = request.user.id
             new_doc.save()
-            #list_files = files_form.save(commit=False)
-            images = post_files_formset.save(commit=False)
-            for image in images:
-                image.document = new_doc
-                image.save()
+            document_files = doc_form.cleaned_data['first_files'] + doc_form.cleaned_data['second_files']
+            for i, one_file in enumerate( document_files ):
+                vo_file = DocumentFile( description="Page {}".format( i + 1 ), image=one_file, document=new_doc )
+                vo_file.temp_id = format( i + 1 )
+                vo_file.save()
             return HttpResponseRedirect('/login')
         else:
-            context = {'doc_form': doc_form, 'file_form_set': file_form_set, }
+            context = {'doc_form': doc_form, }
             return render(request, 'createexam.html', context)
 
 
     else:
-        context = {'doc_form': doc_form, 'file_form_set': file_form_set, }
+        context = {'doc_form': doc_form, }
         return render(request, 'createexam.html', context)
 
 
