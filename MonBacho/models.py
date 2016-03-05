@@ -4,6 +4,7 @@
 import os
 from django.db import models
 from django.utils import timezone
+from django.template.defaultfilters import slugify
 from django.utils.translation import ugettext_lazy as _
 from django.contrib.auth.models import AbstractBaseUser, PermissionsMixin, BaseUserManager
 
@@ -36,6 +37,7 @@ EXAM_YEAR_CHOICES = (
 )
 
 
+
 class ClassLevel( models.Model ):
     class Meta:
         db_table = 'ClassLevel'
@@ -50,6 +52,7 @@ class ClassLevel( models.Model ):
             return self.name
 
 
+
 class School( models.Model ):
     class Meta:
         db_table = 'School'
@@ -60,6 +63,7 @@ class School( models.Model ):
         return self.name
 
 
+
 class ClassTopic( models.Model ):
     class Meta:
         db_table = 'ClassTopic'
@@ -68,6 +72,7 @@ class ClassTopic( models.Model ):
 
     def __unicode__( self ):
         return self.name
+
 
 
 class UserManager( BaseUserManager ):
@@ -82,6 +87,7 @@ class UserManager( BaseUserManager ):
         user.set_password( password )
         user.save( )
         return user
+
 
 
 class User( AbstractBaseUser, PermissionsMixin ):
@@ -119,12 +125,14 @@ class User( AbstractBaseUser, PermissionsMixin ):
         return self.email
 
 
+
 class Document( models.Model ):
     class Meta:
         db_table = 'Document'
 
-    slug = models.SlugField( max_length=100 )
+    slug = models.SlugField( max_length=50 )
     user = models.ForeignKey( User )
+    document_type = "generic"
     level = models.ForeignKey( ClassLevel, null=False, default=1 )
     school = models.ForeignKey( School, null=False, default=1 )
     nb_views = models.IntegerField( default=0 )
@@ -138,24 +146,26 @@ class Document( models.Model ):
         return self.name + " (" + str( self.status ) + ") " + self.school.name
 
 
+
 def upload_function( instance, filename ):
     import settings
     from helper import helper
-    myhelper = helper()
+
+
+    my_helper = helper( )
     ext = filename.split( '.' )[-1]
     filename = "{}_{}.{}".format( instance.document.id, instance.temp_id, ext )
-    document_rep = ""
-    parsed_document_rep = ""
+    document_path = "{}/{}/{}/{}/{}/{}"
     doc_level = "{}{}".format( instance.document.level.name, instance.document.level.sub_category )
-    if isinstance( instance.document, Exam ):
-        document_rep = "{}/{}/{}/{}/{}/{}/".format( "Exams", instance.document.school.name, doc_level,
-                                                    instance.document.matter.name, instance.document.year_exam,
-                                                    instance.document.id )
-        parsed_document_rep = "{}/{}".format( myhelper.remove_accents_spaces( document_rep ), filename )
-    if isinstance( instance.document, Correction ):
-        document_rep = "Corrections"
 
-    return os.path.join( settings.MEDIA_ROOT + '/{}'.format( parsed_document_rep ) )
+    document_path = document_path.format( instance.document.document_type, instance.document.school.name, doc_level,
+                                          instance.document.matter.name, instance.document.year_exam,
+                                          instance.document.id )
+
+    parsed_document_path = "{}/{}".format( my_helper.remove_accents_spaces( document_path ), filename )
+
+    return os.path.join( settings.MEDIA_ROOT + '/{}'.format( parsed_document_path ) )
+
 
 
 class DocumentFile( models.Model ):
@@ -170,15 +180,27 @@ class DocumentFile( models.Model ):
         return self.file_path
 
 
+
 class Exam( Document ):
     class Meta:
         db_table = 'Exam'
 
     year_exam = models.IntegerField( choices=EXAM_YEAR_CHOICES, default='2016' )
     mock_exam = models.IntegerField( choices=EXAM_TYPE, default=1 )
+    document_type = "exam"
 
     def __unicode__( self ):
         return self.name + " " + self.matter
+
+    def save( self, *args, **kwargs ):
+        if not self.id:
+            # Newly created object, so set slug
+            slug_text = "{} {} {} {} {}".format( self.school.name, self.level.name,
+                                                 self.level.sub_category, self.year_exam, self.mock_exam )
+            self.slug = self.name = slugify( slug_text )
+
+        super( Exam, self ).save( *args, **kwargs )
+
 
 
 class Correction( Document ):
@@ -187,9 +209,11 @@ class Correction( Document ):
 
     exam = models.ForeignKey( Exam )
     text = models.TextField( max_length=1024 )
+    document_type = "correction"
 
     def __unicode__( self ):
         return _( u"{} correction du sujet {}".format( self.id, Exam.id ) )
+
 
 
 class Read( models.Model ):
@@ -204,6 +228,7 @@ class Read( models.Model ):
         return self.user.email + " - " + self.document.name + " (" + str( self.read_date ) + ")"
 
 
+
 class Submit( models.Model ):
     class Meta:
         db_table = 'Submit'
@@ -214,6 +239,7 @@ class Submit( models.Model ):
 
     def __unicode__( self ):
         return "{} {} {}".format( self.user.email, self.document.name, self.submit_date )
+
 
 
 class Comment( models.Model ):
