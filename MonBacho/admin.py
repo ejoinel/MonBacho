@@ -1,7 +1,7 @@
 #-*- coding: utf-8 -*-
 
 from django.contrib import admin
-from MonBacho.models import Document, Exam, User, Correction, Read, Submit, Comment, ClassLevel, School, ClassTopic
+from MonBacho.models import Document, Exam, User, Correction, Read, Submit, Comment, ClassLevel, School, ClassTopic, DocumentFile
 
 # class useradmin(admin.ModelAdmin):
 #      list_display = ('first_name', 'email', 'school')
@@ -21,3 +21,4 @@ admin.site.register(User)
 admin.site.register(Exam)
 admin.site.register(ClassLevel)
 admin.site.register(School)
+admin.site.register(DocumentFile)

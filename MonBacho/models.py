@@ -132,7 +132,7 @@ class Document( models.Model ):
 
     slug = models.SlugField( max_length=50 )
     user = models.ForeignKey( User )
-    document_type = "generic"
+    document_type = "Generic"
     level = models.ForeignKey( ClassLevel, null=False, default=1 )
     school = models.ForeignKey( School, null=False, default=1 )
     nb_views = models.IntegerField( default=0 )
@@ -148,10 +148,8 @@ class Document( models.Model ):
 
 
 def upload_function( instance, filename ):
-    import settings
+
     from helper import helper
-
-
     my_helper = helper( )
     ext = filename.split( '.' )[-1]
     filename = "{}_{}.{}".format( instance.document.id, instance.temp_id, ext )
@@ -164,7 +162,7 @@ def upload_function( instance, filename ):
 
     parsed_document_path = "{}/{}".format( my_helper.remove_accents_spaces( document_path ), filename )
 
-    return os.path.join( settings.MEDIA_ROOT + '/{}'.format( parsed_document_path ) )
+    return os.path.join( '{}'.format( parsed_document_path ) )
 
 
 
@@ -177,7 +175,7 @@ class DocumentFile( models.Model ):
     document = models.ForeignKey( Document, default=None )
 
     def __unicode__( self ):
-        return self.file_path
+        return self.description
 
 
 
@@ -187,10 +185,10 @@ class Exam( Document ):
 
     year_exam = models.IntegerField( choices=EXAM_YEAR_CHOICES, default='2016' )
     mock_exam = models.IntegerField( choices=EXAM_TYPE, default=1 )
-    document_type = "exam"
+    document_type = "Exam"
 
     def __unicode__( self ):
-        return self.name + " " + self.matter
+        return self.name + " " + self.matter.name
 
     def save( self, *args, **kwargs ):
         if not self.id:
@@ -209,7 +207,7 @@ class Correction( Document ):
 
     exam = models.ForeignKey( Exam )
     text = models.TextField( max_length=1024 )
-    document_type = "correction"
+    document_type = "Correction"
 
     def __unicode__( self ):
         return _( u"{} correction du sujet {}".format( self.id, Exam.id ) )
