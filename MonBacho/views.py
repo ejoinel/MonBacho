@@ -70,17 +70,24 @@ class ExamListView( ListView ):
     model = models.Exam
     template_name = 'exam_list.html'  # optional (the default is app_name/modelNameInLowerCase_list.html; which will look into your templates folder for that path and file)
     context_object_name = "vos_exam"    #default is object_list as well as model's_verbose_name_list and/or model's_verbose_name_plural_list, if defined in the model's inner Meta class
-    paginate_by = 1  #and that's it !!
+    paginate_by = 2  #and that's it !!
 
     def get_queryset(self):
-        return Exam.objects.order_by('-creation_date')[:2]
+        return Exam.objects.order_by('-creation_date')[:3]
 
     def get_context_data(self, **kwargs):
         context = super(ExamListView, self).get_context_data(**kwargs)
-        vos_exam = Exam.objects.order_by('-creation_date')[:2]
+        vos_exam = Exam.objects.order_by('-creation_date')[:3]
         for vo_exam in vos_exam:
             vo_image = DocumentFile.objects.filter( document_id=vo_exam.document_ptr_id)[0]
             vo_exam.image = vo_image.image.url if vo_image else None
+            vo_exam.display_title = vo_exam.level.name
+            if vo_exam.level.sub_category:
+                vo_exam.display_title += "({})".format( vo_exam.level.sub_category )
+            vo_exam.display_title += " - {}".format( vo_exam.matter.name)
+            display_type_exam = "" if vo_exam.mock_exam else ""
+            vo_exam.diplay_info = "{}({}) - {}".format( vo_exam.school.name, vo_exam.year_exam, display_type_exam )
+            vo_image
 
         paginator = Paginator(vos_exam, self.paginate_by)
 
