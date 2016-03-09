@@ -5,6 +5,7 @@ from django.forms import ModelForm, extras
 from django.forms.formsets import BaseFormSet
 from passwords.fields import PasswordField
 
+from haystack.forms import SearchForm
 from crispy_forms.helper import FormHelper
 from crispy_forms.layout import Submit, Layout, HTML
 from crispy_forms.bootstrap import PrependedText, Field
@@ -16,6 +17,13 @@ import FORM_PROPERTIES
 import ERROR_TXT
 
 EXAM_YEAR_CHOICES = ('2016', '2015', '2014', '2013', '2012', '2011', '2010', '2009')
+
+class ExamSearchForm(SearchForm):
+
+    def no_query_found(self):
+        return self.searchqueryset.all()
+
+
 
 # Formulaire login
 class LoginForm(forms.Form):

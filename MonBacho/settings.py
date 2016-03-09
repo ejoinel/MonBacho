@@ -27,6 +27,7 @@ LOCALE_PATHS = ('~/Projets/Perso/MonBacho/MonBacho/local',)
 
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+#WHOOSH_INDEX = os.path.join(BASE_DIR, 'whoosh/')
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/dev/howto/deployment/checklist/
@@ -65,7 +66,7 @@ if DEBUG:
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': [os.path.join(BASE_DIR, 'templates')],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -84,11 +85,6 @@ CSRF_FAILURE_VIEW = 'Monbacho.views.csrf_failure'
 # Application definition
 
 INSTALLED_APPS = (
-    # third party apps
-    'crispy_forms',
-    'passwords',
-    'multiupload',
-    'bootstrap_pagination',
     # django app
     'django.contrib.admin',
     'django.contrib.auth',
@@ -96,6 +92,13 @@ INSTALLED_APPS = (
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    # third party apps
+    'crispy_forms',
+    'passwords',
+    'multiupload',
+    'bootstrap_pagination',
+    'whoosh',
+    'haystack',
     # My app
     'MonBacho',
 )
@@ -126,6 +129,15 @@ ROOT_URLCONF = 'MonBacho.urls'
 
 WSGI_APPLICATION = 'MonBacho.wsgi.application'
 
+WHOOSH_INDEX = os.path.join(PROJECT_ROOT, 'whoosh/')
+
+HAYSTACK_CONNECTIONS = {
+  'default': {
+    'ENGINE': 'haystack.backends.whoosh_backend.WhooshEngine',
+    'PATH': os.path.join(os.path.dirname(__file__), 'whoosh')
+  },
+}
+HAYSTACK_SIGNAL_PROCESSOR = 'haystack.signals.RealtimeSignalProcessor'
 
 # Database
 # https://docs.djangoproject.com/en/dev/ref/settings/#databases

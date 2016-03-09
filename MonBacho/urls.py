@@ -1,10 +1,12 @@
 #-*- coding: utf-8 -*-
 
+import haystack
 from django.conf.urls import url, include
-from django.contrib import admin
 from django.conf.urls.static import static
-from MonBacho import settings
+from django.contrib import admin
 from django.contrib.staticfiles.urls import staticfiles_urlpatterns
+
+from MonBacho import settings
 from MonBacho.views import login, home, register, createexam, reset_password, ExamListView
 
 admin.autodiscover()
@@ -19,6 +21,7 @@ urlpatterns = [
     url(r'^register$', register),
     url(r'^createexam$', createexam),
     url(r'^exam_list$', ExamListView.as_view()),
+    url(r'^search/', include('haystack.urls')),
     #url(r'^exam_detail/(?P<pk>\d+)/', views.exam_detail, name='person_detail'),
     url(r'^account/reset_password', reset_password, name="reset_password"),
 ]

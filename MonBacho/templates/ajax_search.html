@@ -1,0 +1,5 @@
+{% for vo_exam in vos_exam %}
+   <p>{{ vo_exam.object.name }}</p>
+{% empty %}
+   <p>No results found.</p>
+{% endfor %}
