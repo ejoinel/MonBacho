@@ -61,3 +61,6 @@ MonBacho/templates/.DS_Store
 *.pyc
 
 MonBacho/__init__.pyc
+media
+MonBacho/static/js/.DS_Store
+MonBacho/static/css/.DS_Store
