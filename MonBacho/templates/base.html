@@ -46,35 +46,7 @@
         <script src="{% static 'js/bootstrap-filestyle.min.js' %}"></script>
         <script src="{% static 'js/bootstrap-select.js' %}"></script>
         <script src="{% static 'js/i18n/defaults-fr_FR.js' %}"></script>
-	    <script type="text/javascript" >
-	    	$(document).ready(function(){
-                $('select.selectpicker').attr('data-live-search', 'true');
-                $('[data-toggle="tooltip"]').tooltip();
-	    	});
-    	</script>
         <script src="{% static 'js/jquery.formset.js' %}"></script>
-        <script>
-            $(":file").filestyle({buttonName: "btn-primary", buttonText: "Choisir", size: "sm", placeholder: "Entrez un image"});
-            $('.form-inline').formset({
-                addText: 'Ajouter',
-                deleteText: 'Supprimer'
-            });
-            jQuery(function ($) {
-            $('.panel-heading span.clickable').on("click", function (e) {
-                if ($(this).hasClass('panel-collapsed')) {
-                    // expand the panel
-                    $(this).parents('.panel').find('.panel-body').slideDown();
-                    $(this).removeClass('panel-collapsed');
-                    $(this).find('i').removeClass('glyphicon-chevron-down').addClass('glyphicon-chevron-up');
-                }
-                else {
-                    // collapse the panel
-                    $(this).parents('.panel').find('.panel-body').slideUp();
-                    $(this).addClass('panel-collapsed');
-                    $(this).find('i').removeClass('glyphicon-chevron-up').addClass('glyphicon-chevron-down');
-                }
-            });
-            });
-        </script>
+        <script src="{% static 'js/style_script.js' %}"></script>
 	</body>
 </html>

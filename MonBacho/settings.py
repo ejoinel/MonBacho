@@ -11,6 +11,7 @@ https://docs.djangoproject.com/en/dev/ref/settings/
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 import os
 from django.conf.global_settings import TEMPLATE_CONTEXT_PROCESSORS as TCP
+from tempfile import mkdtemp
 
 DEFAULT_CHARSET = 'utf-8'
 DEFAULT_CONTENT_TYPE = 'text/html'
@@ -84,7 +85,7 @@ CSRF_FAILURE_VIEW = 'Monbacho.views.csrf_failure'
 
 # Application definition
 
-INSTALLED_APPS = (
+DJANGO_APPS = (
     # django app
     'django.contrib.admin',
     'django.contrib.auth',
@@ -92,6 +93,11 @@ INSTALLED_APPS = (
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+)
+
+
+
+THIRD_PARTY_APPS = (
     # third party apps
     'crispy_forms',
     'passwords',
@@ -99,9 +105,16 @@ INSTALLED_APPS = (
     'bootstrap_pagination',
     'whoosh',
     'haystack',
+)
+
+
+
+LOCAL_APPS = (
     # My app
     'MonBacho',
 )
+
+INSTALLED_APPS = DJANGO_APPS + THIRD_PARTY_APPS + LOCAL_APPS
 
 PASSWORD_HASHERS = (
     'django.contrib.auth.hashers.BCryptSHA256PasswordHasher',
@@ -132,11 +145,13 @@ WSGI_APPLICATION = 'MonBacho.wsgi.application'
 WHOOSH_INDEX = os.path.join(PROJECT_ROOT, 'whoosh/')
 
 HAYSTACK_CONNECTIONS = {
-  'default': {
-    'ENGINE': 'haystack.backends.whoosh_backend.WhooshEngine',
-    'PATH': os.path.join(os.path.dirname(__file__), 'whoosh')
-  },
+    'default': {
+        'ENGINE': 'haystack.backends.whoosh_backend.WhooshEngine',
+        'PATH': os.path.join(PROJECT_ROOT, 'whoosh'),
+        'INCLUDE_SPELLING': True,
+    },
 }
+
 HAYSTACK_SIGNAL_PROCESSOR = 'haystack.signals.RealtimeSignalProcessor'
 
 # Database
