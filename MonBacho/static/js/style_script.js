@@ -7,7 +7,7 @@ $(document).ready( function() {
     tooltip_help();
     place_horder_input_file();
     panel_collapse();
- });
+ })
 
 
 

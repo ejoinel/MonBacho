@@ -6,7 +6,7 @@ from django.contrib import admin
 from django.contrib.staticfiles.urls import staticfiles_urlpatterns
 
 from MonBacho import settings
-from MonBacho.views import login, home, register, createexam, reset_password, ExamListView
+from MonBacho.views import login, home, register, createexam, reset_password, ExamListView, search_exam
 
 admin.autodiscover()
 
@@ -22,6 +22,7 @@ urlpatterns = [
     url(r'^exam_list$', ExamListView.as_view()),
     #url(r'^exam_detail/(?P<pk>\d+)/', views.exam_detail, name='person_detail'),
     url(r'^account/reset_password', reset_password, name="reset_password"),
+    url(r'^search$', search_exam ),
 ]
 
 urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

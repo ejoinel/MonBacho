@@ -47,6 +47,16 @@ def get_logged_user_from_request( request ):
     return None
 
 
+def search_exam( request ):
+    vos_exam = []
+    if request.method == 'POST':
+        search_text = request.POST["search_text"]
+        if len( search_text ) >= 2:
+            vos_exam = Exam.objects.filter( name__contains=search_text )
+
+    return render_to_response( "ajax_search.html", {'vos_exam': vos_exam} )
+
+
 
 # @login_required(login_url='/login')
 def home( request ):

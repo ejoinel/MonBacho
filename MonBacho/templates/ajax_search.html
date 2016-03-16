@@ -1,0 +1,7 @@
+{% if vos_exam.count > 0 %}
+    {% for vo_exam in vos_exam %}
+        <li><a href="/MonBacho/get/{{ vo_exam.id }}/">{{ vo_exam.name }}</a></li>
+    {% endfor %}
+{% else %}
+    <li>Aucun resultat</li>
+{% endif %}
