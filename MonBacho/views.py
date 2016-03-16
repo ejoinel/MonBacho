@@ -19,10 +19,9 @@ from django.views.generic import ListView
 from django.core.paginator import Paginator
 from django.core.paginator import EmptyPage
 from django.core.paginator import PageNotAnInteger
-from haystack.query import SearchQuerySet
 
 import FORM_PROPERTIES
-from MonBacho.forms import LoginForm, UserForm, CreateExamForm, AccountResetPassword, ExamSearchForm
+from MonBacho.forms import LoginForm, UserForm, CreateExamForm, AccountResetPassword
 from MonBacho.models import User, DocumentFile, Exam
 from MonBacho.settings import DEFAULT_FROM_EMAIL
 
@@ -31,14 +30,6 @@ MESSAGE_TAGS = { message_constants.DEBUG: 'debug',
                  message_constants.SUCCESS: 'success',
                  message_constants.WARNING: 'warning',
                  message_constants.ERROR: 'danger', }
-
-
-def search_exams(request):
-
-    vos_exam = SearchQuerySet().autocomplete( content_auto=request.POST.get( 'search_text', '' ) )
-
-    return render_to_response('ajax_search.html', {'vos_exam': vos_exam})
-
 
 
 def get_logged_user_from_request( request ):

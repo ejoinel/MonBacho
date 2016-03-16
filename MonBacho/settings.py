@@ -102,9 +102,7 @@ THIRD_PARTY_APPS = (
     'crispy_forms',
     'passwords',
     'multiupload',
-    'bootstrap_pagination',
-    'whoosh',
-    'haystack',
+    'bootstrap_pagination'
 )
 
 
@@ -142,17 +140,6 @@ ROOT_URLCONF = 'MonBacho.urls'
 
 WSGI_APPLICATION = 'MonBacho.wsgi.application'
 
-WHOOSH_INDEX = os.path.join(PROJECT_ROOT, 'whoosh/')
-
-HAYSTACK_CONNECTIONS = {
-    'default': {
-        'ENGINE': 'haystack.backends.whoosh_backend.WhooshEngine',
-        'PATH': os.path.join(PROJECT_ROOT, 'whoosh'),
-        'INCLUDE_SPELLING': True,
-    },
-}
-
-HAYSTACK_SIGNAL_PROCESSOR = 'haystack.signals.RealtimeSignalProcessor'
 
 # Database
 # https://docs.djangoproject.com/en/dev/ref/settings/#databases
