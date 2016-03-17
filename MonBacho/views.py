@@ -52,7 +52,7 @@ def search_exam( request ):
     if request.method == 'POST':
         search_text = request.POST["search_text"]
         if len( search_text ) >= 2:
-            vos_exam = Exam.objects.filter( name__contains=search_text )
+            vos_exam = Exam.objects.filter( name__contains=search_text )[:4]
 
     return render_to_response( "ajax_search.html", {'vos_exam': vos_exam} )
 

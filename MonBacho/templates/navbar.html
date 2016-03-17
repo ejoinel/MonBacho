@@ -28,10 +28,8 @@
         <form role="search" class="navbar-form navbar-left">
             <div class="form-group">
                 {% csrf_token %}
-                <input type="text" id="search" name="search" placeholder="Search" class="form-control">
-                <ul id="search_result" role="menu" class="dropdown-menu">
-
-                </ul>
+                <input class="form-control" type="text" id="search" role="menu">
+                <div class="list-group" id="search_result"></div>
             </div>
         </form>
         <ul class="nav navbar-nav navbar-right">
