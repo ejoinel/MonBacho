@@ -1,0 +1,49 @@
+{% load staticfiles i18n %}
+<!DOCTYPE html>
+
+<html>
+    <head>
+        {% block meta_tags %}{% endblock %}
+        <title>
+            <title>MonBacho - {% block title %}Bienvenue{% endblock %}</title>
+        </title>
+        {% block stylesheets %}
+            <!-- Bootstrap -->
+            <link href="{% static 'css/bootstrap.min.css' %}" rel="stylesheet" media="screen">
+            <link rel="stylesheet" type="text/css" href="{% static 'css/style.css' %}" />
+            <link rel="stylesheet" href="{% static 'font-awesome/css/font-awesome.min.css' %}">
+            <link rel="stylesheet" href="{% static 'css/bootstrap-select.min.css' %}">
+        {% endblock %}
+        {% block javascript %}
+            <script src="{% static 'js/jquery-2.1.3.min.js' %}"></script>
+            <script src="{% static 'js/bootstrap.min.js' %}"></script>
+            <script src="{% static 'js/bootstrap-filestyle.min.js' %}"></script>
+            <script src="{% static 'js/bootstrap-select.js' %}"></script>
+            <script src="{% static 'js/i18n/defaults-fr_FR.js' %}"></script>
+            <script src="{% static 'js/jquery.formset.js' %}"></script>
+            <script src="{% static 'js/style_script.js' %}"></script>
+            <script src="{% static 'js/style_ajax.js' %}"></script>
+        {% endblock %}
+        {% block extra_head %}{% endblock %}
+    </head>
+    <body id="{% block bodyId %}genericPage{% endblock %}">
+        <header>
+        </header>
+        <div id="main" role="main">
+            <div class="container">
+                {% include "navbar.html" %}
+                <div class="row">
+                    <div class= main">
+                       {% for message in messages %}
+                                <div{% if message.tags %} class="alert alert-{{ message.tags }} {% if message.tags == 'error' %}alert-danger{%endif%} alert-dismissible" role="alert"{% endif %}>{{ message }}
+                                    <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                                </div>
+                        {% endfor %}
+                    </div>
+                </div>
+                {% block body_block %}
+                {% endblock %}
+            </div>
+        </div>
+    </body>
+</html>

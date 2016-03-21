@@ -13,32 +13,19 @@
         <header>
 			{% block headerContent %}{% endblock %}
 		</header>
-		{% include "navbar.html" %}
         <!-- Begin Body -->
         <div class="container">
+            {% include "navbar.html" %}
             <div class="row">
-                <div class="col-sm-3 col-md-2 sidebar">
-                    <div class="well">
-                        <ul class="nav nav-stacked" id="sidebar">
-                          <li><a href="#sec1">Section 1</a></li>
-                          <li><a href="#sec2">Section 2</a></li>
-                          <li><a href="#sec3">Section 3</a></li>
-                          <li><a href="#sec4">Section 4</a></li>
-                        </ul>
-                    </div>
-
-                </div>
-                <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
+                <div class= main">
                    {% for message in messages %}
                             <div{% if message.tags %} class="alert alert-{{ message.tags }} {% if message.tags == 'error' %}alert-danger{%endif%} alert-dismissible" role="alert"{% endif %}>{{ message }}
                                 <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
 							</div>
                     {% endfor %}
-                    <div>
-                        {% block body_block %}{% endblock %}
-                    </div>
                 </div>
             </div>
+            {% block body_block %}{% endblock %}
         </div>
 
 	    <script src="{% static 'js/jquery-2.1.3.min.js' %}"></script>

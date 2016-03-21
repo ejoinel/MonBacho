@@ -1,0 +1,12 @@
+{% extends "internal/__base.html" %}
+
+{% block content %}
+    <div class="row">
+        <div class="span9">{# this is now 75% of the page #}
+            {% block main_col %}{% endblock %}
+        </div>
+        <div class="span3">{# this is now 25% of the page #}
+            {% block side_col %}{% endblock %}
+        </div>
+    </div>
+{% endblock %}

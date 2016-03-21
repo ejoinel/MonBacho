@@ -1,4 +1,4 @@
-{% extends "base.html" %}
+{% extends "internal/__base.html" %}
 {% load i18n %}
 {% load crispy_forms_tags %}
 
@@ -6,30 +6,34 @@
 {% block bodyId %}LoginPage{% endblock %}
 {% block body_block %}
 
-<div id="login-overlay" class="modal-dialog">
-    <div class="panel panel-info" >
-        <div class="panel-heading">
-            <div class="panel-title">Connexion</div>
-        </div>
-        <div class="panel-body" >
-            <div class="col-sm-6">
-                <div class="well">
-                    <form id="loginForm" method="POST">
-                        {% crispy form %}
-                    </form>
-                    <a href="/resetpassword/">{% trans "Mot de passe oublié ?" %}</a>
+<div class="row">
+    <div class="col-sm-12 col-md-12">
+        <div id="login-overlay" class="modal-dialog">
+            <div class="panel panel-info" >
+                <div class="panel-heading">
+                    <div class="panel-title">Connexion</div>
                 </div>
-            </div>
-            <div class="col-sm-6">
-                <p class="lead">{% trans "L'inscrition vous permet:" %}</p>
-                <ul class="list-unstyled" style="line-height: 2">
-                    <li><span class="fa fa-check-square-o text-success"></span>{% trans "Consultez tous les examens/corrigés" %}</li>
-                    <li><span class="fa fa-check-square-o text-success"></span>{% trans "Proposez des examens/corrigés" %}</li>
-                    <li><span class="fa fa-check-square-o text-success"></span>{% trans "Adhérez à la newsletter" %}</li>
-                    <li><span class="fa fa-check-square-o text-success"></span>{% trans "Discutez avec d'autres membres" %}</li>
-                    <li><span class="fa fa-check-square-o text-success"></span>{% trans "Et bien plus que ça ..." %}</li>
-                </ul>
-                <p><a href="register" class="btn btn-info btn-block">{% trans "Créer un compte" %}</a></p>
+                <div class="panel-body" >
+                    <div class="col-sm-6">
+                        <div class="well">
+                            <form id="loginForm" method="POST">
+                                {% crispy form %}
+                            </form>
+                            <a href="/resetpassword/">{% trans "Mot de passe oublié ?" %}</a>
+                        </div>
+                    </div>
+                    <div class="col-sm-6">
+                        <p class="lead">{% trans "L'inscrition vous permet:" %}</p>
+                        <ul class="list-unstyled" style="line-height: 2">
+                            <li><span class="fa fa-check-square-o text-success"></span>{% trans "Consultez tous les examens/corrigés" %}</li>
+                            <li><span class="fa fa-check-square-o text-success"></span>{% trans "Proposez des examens/corrigés" %}</li>
+                            <li><span class="fa fa-check-square-o text-success"></span>{% trans "Adhérez à la newsletter" %}</li>
+                            <li><span class="fa fa-check-square-o text-success"></span>{% trans "Discutez avec d'autres membres" %}</li>
+                            <li><span class="fa fa-check-square-o text-success"></span>{% trans "Et bien plus que ça ..." %}</li>
+                        </ul>
+                        <p><a href="register" class="btn btn-info btn-block">{% trans "Créer un compte" %}</a></p>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
