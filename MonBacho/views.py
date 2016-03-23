@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 
 import models
+from django.db.models import Q
 from datetime import datetime
 from django.contrib import messages
 from django.contrib.auth import authenticate
@@ -52,7 +53,8 @@ def search_exam( request ):
     if request.method == 'POST':
         search_text = request.POST["search_text"]
         if len( search_text ) >= 2:
-            vos_exam = Exam.objects.filter( name__contains=search_text )[:4]
+            search_array = search_text.split(' ')
+            vos_exam = Exam.objects.filter(reduce(lambda x, y: x | y, [Q(name__contains=word) for word in search_array]))
 
     return render_to_response( "ajax_search.html", {'vos_exam': vos_exam} )
 
