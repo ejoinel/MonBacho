@@ -1,12 +1,14 @@
-{% extends "base.html" %}
+{% extends "internal/__l_left_sidebar.html" %}
 {% load staticfiles %}
 {% load bootstrap_pagination %}
 {% load i18n %}
 {% block title %}Examens{% endblock %}
 {% block bodyId %}Examens{% endblock %}
-{% block body_block %}
 
-<div class = "row">
+{% block side_col %}
+    {% include "left_sidebar.html" %}
+{% endblock %}
+{% block main_col %}
     {%for vo_exam in vos_exam %}
        <div class = "col-lg-3 col-md-4 col-xs-6 thumb">
            <div class = "thumbnail">
@@ -32,16 +34,16 @@
                   </p>
               </div>
            </div>
-           <div class="clearfix"></div>
        </div>
     {% endfor%}
-</div>
-
-{% if is_paginated %}
-    <div class="pagination-row text-right">
-        {% bootstrap_paginate vos_exam range=5 show_prev_next="false" show_first_last="true" %}
-    </div>
-</div>
-{% endif %}
 {% endblock %}
+
+{% block list_pagination %}
+    {% if is_paginated %}
+        <div class="pagination-row text-right">
+            {% bootstrap_paginate vos_exam range=5 show_prev_next="false" show_first_last="true" %}
+        </div>
+    {% endif %}
+{% endblock %}
+
 
